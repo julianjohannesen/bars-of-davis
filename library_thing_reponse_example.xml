@@ -1,0 +1,276 @@
+<!--This is an example of the common knowledge database returned when using the GET WORK method.-->
+
+<response stat="ok">
+    <ltml xmlns="http://www.librarything.com/" version="1.1">
+        <item id="1060" type="work">
+            <author id="216" authorcode="clarkesusanna">Susanna Clarke</author>
+            <title>Jonathan Strange & Mr. Norrell: A Novel</title>
+            <rating>7.9</rating>
+            <url>http://www.librarything.com/work/1060</url>
+            <commonknowledge>
+                <fieldList>
+                    <field type="4" name="awards" displayName="Awards and honors">
+                        <versionList>
+                            <version id="11380928" archived="0" lang="eng">
+                                <date timestamp="1531152831">Mon, 09 Jul 2018 12:13:51 -0400</date>
+                                <person id="917">
+                                    <name>andyl</name>
+                                    <url>http://www.librarything.com/profile/andyl</url>
+                                </person>
+                                <factList>
+                                    <fact>World Fantasy Award (Novel, 2005)</fact>
+                                    
+                                    <fact>Locus Award Finalist (2005.4|First Novel, 2005)</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="37" name="movies" displayName="Related movies">
+                        <versionList>
+                            <version id="10992527" archived="0" lang="eng">
+                                <date timestamp="1517877836">Mon, 05 Feb 2018 19:43:56 -0500</date>
+                                <person id="453203">
+                                    <name>loremistress</name>
+                                    <url>http://www.librarything.com/profile/loremistress</url>
+                                </person>
+                                <factList>
+                                    <fact>Jonathan Strange & Mr. Norrell (2015 | tt2548418)</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="16" name="originalpublicationdate" displayName="Original publication date">
+                        <versionList>
+                            <version id="9287189" archived="0" lang="eng">
+                                <date timestamp="1465242503">Mon, 06 Jun 2016 15:48:23 -0400</date>
+                                <person id="312995">
+                                    <name>Smiler69</name>
+                                    <url>http://www.librarything.com/profile/Smiler69</url>
+                                </person>
+                                <factList>
+                                    <fact>2004</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="2" name="placesmentioned" displayName="Important places">
+                        <versionList>
+                            <version id="9244653" archived="0" lang="eng">
+                                <date timestamp="1463891252">Sun, 22 May 2016 00:27:32 -0400</date>
+                                <person id="1505463">
+                                    <name>Wolfman08</name>
+                                    <url>http://www.librarything.com/profile/Wolfman08</url>
+                                </person>
+                                <factList>
+                                    <fact>London, England, UK</fact>
+                                    
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="3" name="characternames" displayName="People/Characters">
+                        <versionList>
+                            <version id="9244633" archived="0" lang="eng">
+                                <date timestamp="1463890804">Sun, 22 May 2016 00:20:04 -0400</date>
+                                <person id="1505463">
+                                    <name>Wolfman08</name>
+                                    <url>http://www.librarything.com/profile/Wolfman08</url>
+                                </person>
+                                <factList>
+                                    <fact>Jonathan Strange</fact>
+                                    <fact>William Hadley-Bright</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="58" name="originallanguage" displayName="Original language">
+                        <versionList>
+                            <version id="8557485" archived="0" lang="eng">
+                                <date timestamp="1443353334">Sun, 27 Sep 2015 07:28:54 -0400</date>
+                                <person id="1432548">
+                                    <name>hf22</name>
+                                    <url>http://www.librarything.com/profile/hf22</url>
+                                </person>
+                                <factList>
+                                    <fact>English</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="57" name="haikusummary" displayName="Book haiku">
+                        <versionList>
+                            <version id="8246749" archived="0" lang="eng">
+                                <date timestamp="1436448877">Thu, 09 Jul 2015 09:34:37 -0400</date>
+                                <person id="325198">
+                                    <name>Taphophile13</name>
+                                    <url>http://www.librarything.com/profile/Taphophile13</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ Two odd magicians <br> restore magic to England <br> and go kind of nuts. (marcusbrutus) ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="41" name="originaltitle" displayName="Original title">
+                        <versionList>
+                            <version id="7127581" archived="0" lang="eng">
+                                <date timestamp="1399122896">Sat, 03 May 2014 09:14:56 -0400</date>
+                                <person id="1486712">
+                                    <name>Luisali</name>
+                                    <url>http://www.librarything.com/profile/Luisali</url>
+                                </person>
+                                <factList>
+                                    <fact>Jonathan Strange & Mr. Norrell</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="28" name="epigraph" displayName="Epigraph">
+                        <versionList>
+                            <version id="5381639" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="684944">
+                                    <name>fig2</name>
+                                    <url>http://www.librarything.com/profile/fig2</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ He hardly ever spoke of magic, and when he did it was like a history lesson and no one could bear to listen to him. ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="27" name="quotations" displayName="Quotations">
+                        <versionList>
+                            <version id="5381638" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="1364429">
+                                    <name>johnny_7713</name>
+                                    <url>http://www.librarything.com/profile/johnny_7713</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ "Can a magician kill a man by magic?" Lord Wellington asked Strange. Strange frowned. He seemed to dislike the question. "I suppose a magician might," he admitted "but a gentleman never could." ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="36" name="mediareviews" displayName="Media reviews">
+                        <versionList>
+                            <version id="5381637" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="116044">
+                                    <name>Shortride</name>
+                                    <url>http://www.librarything.com/profile/Shortride</url>
+                                </person>
+                                <factList>
+                                    <fact>129</fact>
+                                    
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="34" name="events" displayName="Important events">
+                        <versionList>
+                            <version id="5381635" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="33087">
+                                    <name>nnicole</name>
+                                    <url>http://www.librarything.com/profile/nnicole</url>
+                                </person>
+                                <factList>
+                                    <fact>Peninsular War (1807|1814)</fact>
+                                    
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="30" name="dedication" displayName="Dedication">
+                        <versionList>
+                            <version id="5381632" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="200103">
+                                    <name>PhaedraB</name>
+                                    <url>http://www.librarything.com/profile/PhaedraB</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ In memory of my brother, Paul Frederick Gunn Clarke, 1961-2000 ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="29" name="blurbers" displayName="Blurbers">
+                        <versionList>
+                            <version id="5381630" archived="0" lang="eng">
+                                <date timestamp="1354046115">Tue, 27 Nov 2012 14:55:15 -0500</date>
+                                <person id="200103">
+                                    <name>PhaedraB</name>
+                                    <url>http://www.librarything.com/profile/PhaedraB</url>
+                                </person>
+                                <factList>
+                                    <fact>Gaiman, Neil </fact>
+                                    <fact>Palliser, Charles </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="26" name="lastwords" displayName="Last words">
+                        <versionList>
+                            <version id="5381628" archived="0" lang="eng">
+                                <date timestamp="1354046114">Tue, 27 Nov 2012 14:55:14 -0500</date>
+                                <person id="23570">
+                                    <name>conceptDawg</name>
+                                    <url>http://www.librarything.com/profile/conceptDawg</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ Then he turned upon his heel and disappeared into the Darkness. ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="25" name="firstwords" displayName="First words">
+                        <versionList>
+                            <version id="5381626" archived="0" lang="eng">
+                                <date timestamp="1354046114">Tue, 27 Nov 2012 14:55:14 -0500</date>
+                                <person id="23570">
+                                    <name>conceptDawg</name>
+                                    <url>http://www.librarything.com/profile/conceptDawg</url>
+                                </person>
+                                <factList>
+                                    <fact>
+![CDATA[ Some years ago there was in the city of York a society of magicians. ]]>
+                                    </fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                    <field type="1" name="literaryeditors" displayName="Publisher's editor">
+                        <versionList>
+                            <version id="5381617" archived="0" lang="eng">
+                                <date timestamp="1354046113">Tue, 27 Nov 2012 14:55:13 -0500</date>
+                                <person id="61510">
+                                    <name>KingRat</name>
+                                    <url>http://www.librarything.com/profile/KingRat</url>
+                                </person>
+                                <factList>
+                                    <fact>Nielsen Hayden, Patrick</fact>
+                                </factList>
+                            </version>
+                        </versionList>
+                    </field>
+                </fieldList>
+            </commonknowledge>
+        </item>
+        <legal>
+By using this data you agree to the LibraryThing API terms of service.
+        </legal>
+    </ltml>
+</response>
