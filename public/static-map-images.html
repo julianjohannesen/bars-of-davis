@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Maps Static Image Generator</title>
+</head>
+
+<body>
+    <h1>Google Maps Static Image Generator</h1>
+    <form id="myForm">
+
+        <div>
+            <label for="mapHeight">Map Height:</label>
+            <input type="text" name="mapHeight" id="map-height" value="" tabindex="1">
+        </div>
+        <div>
+            <label for="mapWidth">Map Width:</label>
+            <input type="text" name="mapWidth" id="map-width" value="" tabindex="2">
+        </div>
+        <div>
+            <label for="mapLat">Location Latitude:</label>
+            <input type="text" name="mapLat" id="map-lat" value="" tabindex="3">
+        </div>
+        <div>
+            <label for="mapHeight">Location Longitude:</label>
+            <input type="text" name="mapHeight" id="map-height" value="" tabindex="4">
+        </div>
+        <div>
+            <label for="panoHeading">Camera Reference Position:</label>
+            <input type="text" name="panoHeading" id="pano-heading" value="" tabindex="5">
+        </div>
+        <div>
+            <label for="panoPitch">Camera Reference Angle:</label>
+            <input type="text" name="panoPitch" id="pano-pitch" value="" tabindex="5">
+        </div>
+        <div>
+            <label for="panoFov">Zoom:</label>
+            <input type="text" name="panoFov" id="pano-fov" value="" tabindex="5">
+        </div>
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+
+    </form>
+
+    <figure id="map">
+        <img src="" />
+        <figcaption>
+
+        </figcaption>
+    </figure>
+
+
+    <script>
+
+        class Map {
+            constructor(height, width, lat, long, heading, pitch, fov) {
+                this.key = 'AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU';
+                this.width = width;
+                this.heading = heading;
+                this.lat = lat;
+                this.long = long;
+                this.height = height;
+                this.pitch = pitch;
+                this.fov = fov;
+            }
+            set location(){`${this.lat},${this.long}`}
+            set size(){`${this.height}x${this.width}`}
+            buildURL = () => `http://maps.googleapis.com/maps/api/streetview?
+                key=${this.key}&
+                size=${this.size}&
+                location=${this.location}&
+                heading=${this.heading}&
+                pitch=${this.pitch}&
+                fov=${this.fov}
+                `;
+        }
+
+        const example = new Map(500, 500, 41.40315, 2,17380, 40, 40, 90);
+
+        const map = document.getElementById("map")
+        let url = example.buildURL();
+        map.firstChild.src = url;
+        map.lastChild.textContent = url; 
+
+    </script>
+
+
+</body>
+
+</html>

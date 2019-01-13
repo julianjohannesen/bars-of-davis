@@ -20,18 +20,32 @@
                 let map;
                 function initMap() {
                     console.log("Is this called?")
-                    map = new google.maps.Map(
+                    // That's google.maps.Map with a capital "M"
+                    const map1 = new google.maps.Map(
                         document.getElementById("map"), 
                         {
-                            center: { "lat": 40.7413549, "lng": -74.9980244 },
-                            zoom: 13
+                            // If you want the map centered on a marker, then this 
+                            // center location and the marker location need to match
+                            center: { "lat": 40.719526, "lng": -74.0089934 },
+                            zoom: 18
                         }
                     );
+                    
                     const wherever = {"lat": 40.719526, "lng": -74.0089934};
-                    const marker = new google.maps.Marker({
+                    // That's google.maps.Marker with a capital "M"
+                    const marker1 = new google.maps.Marker({
                         position: wherever,
-                        map: map,
+                        map: map1,
                         title: "First Marker"
+                    });
+                    // That's InfoWindow with a capital "I"
+                    const infoWindow1 = new google.maps.InfoWindow({
+                        content: "This is an info window, motherfucker."
+                    });
+                    // Listen on the marker
+                    // This is "addListener", not "addEventListener"
+                    marker1.addListener("click", () => {
+                        infoWindow1.open(map1, marker1);
                     });
                 }
     </script>

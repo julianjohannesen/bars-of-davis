@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tactical Map</title>
+    <style>
+        div#map {
+            height: 70vh;
+            position: relative !important; /* static, inherit, and unset all work */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="options-box">
+            <h1>Landing and Base Sites: Tribeca ZoC004</h1>
+            <div>
+                <input id="show-listings" type="button" value="Show Landing and Base Locations" />
+                <input id="hide-listings" type="button" value="Hide" />
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+    <script>
+
+        let map1, bounds1;
+        function initMap() { 
+            const myMapStyle1 = new google.maps.StyledMapType([
+                { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+                { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                {
+                    featureType: 'administrative.locality',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'poi.business',
+                    stylers: [{ visibility: 'off' }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#263c3f' }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#6b9a76' }]
+                },
+                {
+                    // Turn off all Points of Interest
+                    "featureType": "poi",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#38414e' }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry.stroke',
+                    stylers: [{ color: '#212a37' }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#9ca5b3' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#746855' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry.stroke',
+                    stylers: [{ color: '#1f2835' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#f3d19c' }]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#2f3948' }]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#17263c' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#515c6d' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.stroke',
+                    stylers: [{ color: '#17263c' }]
+                }
+            ],
+                { name: "Night Mode" });
+            const myMapStyle2 = new google.maps.StyledMapType([
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8ec3b9"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1a3646"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#4b6878"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#64779e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "visibility": "on"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.province",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#4b6878"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "landscape.man_made",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#334e87"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "landscape.natural",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#283d6a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#6f9ba5"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": 'poi.business',
+                    "stylers": [
+                        {
+                            visibility: 'off'
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3C7680"
+                        }
+                    ]
+                },
+                {
+                    // Turn off all Points of Interest
+                    "featureType": "poi",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#304a7d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#98a5be"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#2c6675"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#255763"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#b0d5ce"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#98a5be"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.line",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#283d6a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.station",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3a4762"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#0e1626"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#4e6d70"
+                        }
+                    ]
+                }
+            ], { name: "Cool View" })
+
+            function makeMarkerIcon(markerColor) {
+                var markerImage = new google.maps.MarkerImage(
+                    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+                    '|40|_|%E2%80%A2',
+                    new google.maps.Size(21, 34),
+                    new google.maps.Point(0, 0),
+                    new google.maps.Point(10, 34),
+                    new google.maps.Size(21, 34));
+                return markerImage;
+            }
+            var defaultIcon = makeMarkerIcon('0091ff');
+            var highlightedIcon = makeMarkerIcon('FFFF24');
+
+            const locationsArray = [
+                { title: "Landing Site 1", location: { lat: 40.719526, lng: -74.0089934 } },
+                { title: "Forward Base Alpha", location: { lat: 40.720313, lng: -74.0085313 } },
+                { title: "Forward Base Beta", location: { lat: 40.722311, lng: -74.008511 } },
+            ];
+
+            const map1Options = {
+                center: { "lat": 40.719526, "lng": -74.0089934 },
+                zoom: 18,
+                mapTypeControlOptions: {mapTypeIds: ['roadmap', 'styled_map1', 'styled_map2']}
+            }
+            map1 = new google.maps.Map(document.getElementById("map"), map1Options);
+
+            map1.mapTypes.set('styled_map1', myMapStyle1);
+            map1.setMapTypeId('styled_map1');
+            map1.mapTypes.set('styled_map2', myMapStyle2);
+            map1.setMapTypeId('styled_map2');
+
+            const createMarker = (location, index) => {
+                return new google.maps.Marker({
+                    animation: google.maps.Animation.DROP,
+                    icon: defaultIcon,
+                    id: index,
+                    position: location.location,
+                    title: location.title
+                })
+            }
+            const markersArray = locationsArray.map(createMarker);
+
+            const anInfoWindow = new google.maps.InfoWindow()
+            const populateInfoWindow = (infoWind, marker, map) => {
+                if (infoWind !== marker) {
+                    infoWind.marker = marker;
+                    infoWind.setContent(`<div id='marker-title'>${marker.title}</div><div id='lat-long'>Latitude: ${marker.position.lat}, Longitude: ${marker.position.lng}</div><div id='pano'></div>`);
+                    infoWind.open(map, marker);
+                    infoWind.addListener("closeclick", () => infoWind.marker = null);
+                }
+            }
+
+            // Add a listener for each marker. 
+            // The callback creates the window and populates it
+            markersArray.forEach((marker, index) => {
+                marker.addListener(
+                    "click",
+                    () => populateInfoWindow(anInfoWindow, marker, map1)
+                );
+            });
+
+            // Two event listeners - one for icon mouseover, 
+            // and one for icon mouseout, to change the colors
+            // back and forth.
+            marker.addListener('mouseover', function () {
+                this.setIcon(highlightedIcon);
+            });
+            marker.addListener('mouseout', function () {
+                this.setIcon(defaultIcon);
+            });
+
+            showListings = () => {
+
+                // Ensure that no matter where our markers are placed
+                // the map will grow to encompass them
+                bounds1 = new google.maps.LatLngBounds();
+
+                // Extend the map boundary to encompass all markers. 
+                // This has to happen after the markers have been created.
+                markersArray.forEach((marker) => {
+                    // If you want to hide all markers, not just the
+                    // ones that are out of bounds of your map given
+                    // the center and zoom level that you set, then
+                    // you need to not set the map when you create the
+                    // markers and instead set the map here
+                    marker.setMap(map1);
+                    bounds1.extend(marker.position);
+                });
+
+                // Expand the map with fitBounds.
+                map1.fitBounds(bounds1);
+
+            }
+            // hideListings will hide any listings when called
+            // by the hide listings button's event listener.
+            hideListings = () => {
+                // For each marker, set its map to null. The 
+                // markers still exist, they just aren't 
+                // assigned to a map
+                markersArray.forEach(marker => {
+                    marker.setMap(null);
+                });
+            }
+
+            // Add the event listeners for clicking on the show or
+            // hide listings buttons.
+            document.getElementById("show-listings").addEventListener("click", showListings);
+            document.getElementById("hide-listings").addEventListener("click", hideListings);
+
+            // TODO: Add the event listeners for the map type toggle
+        }
+
+
+
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU&libraries=geometry&v=3&callback=initMap"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tactical Map</title>
+    <style>
+        /* When I changed the height of the map, I was able to set the map's position to relative. Originally, the map height was set to 100%, and its position could only be set as static, inherit or unset.*/
+        div#map {
+            height: 70vh;
+            position: relative !important; /* static, inherit, and unset all work */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <!-- The listings controls -->
+        <div id="options-box">
+            <h1>Landing and Base Sites: Tribeca ZoC004</h1>
+            <div>
+                <!-- Click to show listings -->
+                <input id="show-listings" type="button" value="Show Landing and Base Locations" />
+                <!-- Click to hide listings -->
+                <input id="hide-listings" type="button" value="Hide" />
+            </div>
+        </div>
+        <!-- The map container -->
+        <div id="map"></div>
+    </div>
+    <script>
+
+        let map1, bounds1;
+
+        // initMap is called after the Map API loads
+        function initMap() {
+
+            // You can change the default style of feature types,
+            // and element types within those features with 
+            // "stylers." The styles here come from Google's 
+            // night view stylings. 
+            const myMapStyle1 = new google.maps.StyledMapType([
+                { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+                { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+                {
+                    featureType: 'administrative.locality',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'poi.business',
+                    stylers: [{ visibility: 'off' }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#263c3f' }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#6b9a76' }]
+                },
+                {
+                    // Turn off all Points of Interest
+                    "featureType": "poi",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#38414e' }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry.stroke',
+                    stylers: [{ color: '#212a37' }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#9ca5b3' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#746855' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry.stroke',
+                    stylers: [{ color: '#1f2835' }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#f3d19c' }]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#2f3948' }]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#d59563' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'geometry',
+                    stylers: [{ color: '#17263c' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.fill',
+                    stylers: [{ color: '#515c6d' }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.stroke',
+                    stylers: [{ color: '#17263c' }]
+                }
+            ],
+                { name: "Night Mode" });
+
+            // You can define as many custom style sets as 
+            // you like and then include them as optional views
+            // in the map controls in the same way that maps 
+            // include "roadmap" and "satellite" views
+            const myMapStyle2 = new google.maps.StyledMapType([
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8ec3b9"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1a3646"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#4b6878"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#64779e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "visibility": "on"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.province",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#4b6878"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "landscape.man_made",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#334e87"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "landscape.natural",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#283d6a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#6f9ba5"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": 'poi.business',
+                    "stylers": [
+                        {
+                            visibility: 'off'
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3C7680"
+                        }
+                    ]
+                },
+                {
+                    // Turn off all Points of Interest
+                    "featureType": "poi",
+                    "elementType": "all",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#304a7d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#98a5be"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#2c6675"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                        {
+                            "color": "#255763"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#b0d5ce"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#023e58"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#98a5be"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1d2c4d"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.line",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#283d6a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.station",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3a4762"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#0e1626"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#4e6d70"
+                        }
+                    ]
+                }
+            ], { name: "Cool View" })
+
+            // This function takes in a COLOR, and then creates a new marker
+            // icon of thpat color. The icon will be 21 px wide by 34 high, have an origin
+            // of 0, 0 and be anchored at 10, 34).
+            function makeMarkerIcon(markerColor) {
+                var markerImage = new google.maps.MarkerImage(
+                    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+                    '|40|_|%E2%80%A2',
+                    new google.maps.Size(21, 34),
+                    new google.maps.Point(0, 0),
+                    new google.maps.Point(10, 34),
+                    new google.maps.Size(21, 34));
+                return markerImage;
+            }
+
+            // Style the markers a bit. This will be our listing marker icon.
+            var defaultIcon = makeMarkerIcon('0091ff');
+
+            // Create a "highlighted location" marker color for when the user
+            // mouses over the marker.
+            var highlightedIcon = makeMarkerIcon('FFFF24');
+
+            // The array of locations. Ordinarily, this would come from 
+            // a database
+            const locationsArray = [
+                // This would be a whole bunch of location objects
+                // with title and location where the title is a string
+                // and the location is a lat lng object
+                { title: "Landing Site 1", location: { lat: 40.719526, lng: -74.0089934 } },
+                { title: "Forward Base Alpha", location: { lat: 40.720313, lng: -74.0085313 } },
+                { title: "Forward Base Beta", location: { lat: 40.722311, lng: -74.008511 } },
+            ];
+
+            // The map instance. Supply a center point and a zoom level. 
+            // Those are the only two required settings.
+            map1 = new google.maps.Map(
+                // The first argument tells the browser where to place 
+                // the map
+                document.getElementById("map"),
+                // The second argument defines a map with center &  zoom
+                {
+                    center: { "lat": 40.719526, "lng": -74.0089934 },
+                    zoom: 18,
+                    // Use the "styles" property to change the default 
+                    // map style
+                    // styles: myStyles 
+                    // Or you can supply control options, for example, 
+                    // mapTypeIds that indicate which maps types to 
+                    // include on your map. (Below you need to indicate 
+                    // which map style objects are associated with which 
+                    // map ids.)
+                    mapTypeControlOptions: {
+                        mapTypeIds: ['roadmap', 'styled_map1', 'styled_map2']
+                    }
+                }
+            );
+
+            // (1) Associate the map type id with a map style object 
+            // and (2) set it to display. 
+            // (1) Call mapTypes.set() on the map. The first argument 
+            // is the map type id and the second argument is the map 
+            // style object.
+            map1.mapTypes.set('styled_map1', myMapStyle1);
+            // (2) Then use setMapTypeId to display the map. Call 
+            // setMapTypeId() on the map and pass it the map type id.
+            map1.setMapTypeId('styled_map1');
+
+            map1.mapTypes.set('styled_map2', myMapStyle2);
+            map1.setMapTypeId('styled_map2');
+
+            // Map over the locations and create a marker for each
+            // location, storing it in the markers array. Expand
+            // the boundary of the map if necessary.
+            const markersArray = locationsArray.map((location, index) => {
+                // Create a marker for this location
+                return new google.maps.Marker({
+                    // This animation does not work with my current
+                    // setup.
+                    animation: google.maps.Animation.DROP,
+                    icon: defaultIcon,
+                    id: index,
+                    // To show markers on load, set the map property
+                    // here. Otherwise, set it before boundary.extend.
+                    // map: map1,
+                    position: location.location,
+                    title: location.title
+                });
+
+            });
+
+            // Create one infoWindow instance without any details
+            const anInfoWindow = new google.maps.InfoWindow()
+
+            // populateInfoWindow will add the title, etc. to the
+            // info window and then clear it again on close
+            const populateInfoWindow = (infoWind, marker, map) => {
+                if (infoWind !== marker) {
+                    infoWind.marker = marker;
+                    // Set the info window content to the title
+                    // plus the location in lat/lng.
+                    infoWind.setContent(`${marker.title} <br> Latitude: ${marker.position.lat}, Longitude: ${marker.position.lng}`);
+                    // Open the info window.
+                    infoWind.open(map, marker);
+                    // Clear marker property when info window
+                    // is closed.
+                    infoWind.addListener("closeclick", () => infoWind.marker = null);
+                }
+            }
+
+            // Add a listener for each marker. 
+            // The callback creates the window and populates it
+            markersArray.forEach((marker, index) => {
+                marker.addListener(
+                    "click",
+                    () => populateInfoWindow(anInfoWindow, marker, map1)
+                );
+            });
+
+            // Two event listeners - one for icon mouseover, 
+            // and one for icon mouseout, to change the colors
+            // back and forth.
+            marker.addListener('mouseover', function () {
+                this.setIcon(highlightedIcon);
+            });
+            marker.addListener('mouseout', function () {
+                this.setIcon(defaultIcon);
+            });
+
+            showListings = () => {
+
+                // Ensure that no matter where our markers are placed
+                // the map will grow to encompass them
+                bounds1 = new google.maps.LatLngBounds();
+
+                // Extend the map boundary to encompass all markers. 
+                // This has to happen after the markers have been created.
+                markersArray.forEach((marker) => {
+                    // If you want to hide all markers, not just the
+                    // ones that are out of bounds of your map given
+                    // the center and zoom level that you set, then
+                    // you need to not set the map when you create the
+                    // markers and instead set the map here
+                    marker.setMap(map1);
+                    bounds1.extend(marker.position);
+                });
+
+                // Expand the map with fitBounds.
+                map1.fitBounds(bounds1);
+
+            }
+            // hideListings will hide any listings when called
+            // by the hide listings button's event listener.
+            hideListings = () => {
+                // For each marker, set its map to null. The 
+                // markers still exist, they just aren't 
+                // assigned to a map
+                markersArray.forEach(marker => {
+                    marker.setMap(null);
+                });
+            }
+
+            // Add the event listeners for clicking on the show or
+            // hide listings buttons.
+            document.getElementById("show-listings").addEventListener("click", showListings);
+            document.getElementById("hide-listings").addEventListener("click", hideListings);
+
+            // TODO: Add the event listeners for the map type toggle
+        }
+
+
+
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU&libraries=geometry&v=3&callback=initMap"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!-- This is the corresponding "starter code" for 
+    07_Markers/Infowindows in Udacity and Google's 
+    Maps API Course, Lesson 1 -->
+<html>
+
+<head>
+    <!-- styles put here, but you can include a CSS
+         file and reference it instead! -->
+    <style type="text/css">
+        html,
+        body {
+            /* I've had problems with setting height 
+            to 100% in the past that were related to 
+            zoom level */
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            /* I've had problems with setting height 
+            to 100% in the past that were related to 
+            zoom level */
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script type="text/javascript">
+        // Create a map variable
+        let myMap;
+        // Function to initialize the map within the map div
+        function initMap() {
+            myMap = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 40.74135, lng: -73.99802 },
+                zoom: 14
+            });
+            
+            // Create a single latLng literal object.
+            // But why don't we use the API's constructor here?
+            const singleLatLng = { lat: 40.74135, lng: -73.99802 };
+            
+            // TODO: Create a single marker appearing on initialize -
+            // Create it with the position of the singleLatLng,
+            // on the map, and give it your own title!
+            const myMarker = new google.maps.Marker({
+                animation: google.maps.Animation.Drop,
+                map: myMap,
+                //label: singleLatLng.lat + ", " + singleLatLng.lng,
+                position: singleLatLng,
+                title: `My Map Marker, Bitches!`,
+            });
+
+            // TODO: create a single infowindow, with your own
+            // content. It must appear on the marker
+
+            // Create one infoWindow instance without any details
+            const myInfoWindow = new google.maps.InfoWindow()
+
+            // Using an info window instance and a marker instance, 
+            // set the window's marker, content, and open properties,
+            // and add a listener to hide the window on close
+            const populateInfoWindow = (infoWind, marker, map) => {
+                if(infoWind !== marker) {
+                    // Set the window's marker property to
+                    // the marker
+                    infoWind.marker = marker;
+                    // Set the window's content to the marker's title.
+                    infoWind.setContent(`${myMarker.title} <br> Latitude: ${singleLatLng.lat}, Longitude: ${singleLatLng.lng}`);
+                    // Open the info window for a particular
+                    // map and a particular marker
+                    infoWind.open(map, marker);
+                    // Clear the marker property when info window
+                    // is closed. The same info window instance 
+                    // can be used over and over again
+                    infoWind.addListener("closeclick", (e) => infoWind.marker = null);
+                }
+            }
+
+            // TODO: create an EVENT LISTENER so that the infowindow opens when
+            // the marker is clicked!
+            myMarker.addListener("click", ()=>populateInfoWindow(myInfoWindow, myMarker, myMap))
+        }
+    </script>
+    <!--TODO: Insert your API Key in the below call to load the API.-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU&callback=initMap">
+    </script>
+</body>
+
+</html>
