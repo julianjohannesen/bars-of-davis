@@ -25,7 +25,7 @@ export default class Formx extends Component {
         return (
             <form id="filterForm" className="section columns" noValidate onSubmit={this.handleSubmit}>
                 <Field className="column is-half">
-                    <Label htmlFor="filterInput">Filter</Label>
+                    <Label htmlFor="filterInput" className="is-invisible">Filter</Label>
                     <Control >
                         <Input
                             id="filterInput"
@@ -41,12 +41,9 @@ export default class Formx extends Component {
                 </Field>
 
 
-                <Field>
+                <Field className="column is-half">
                     <Control>
                         <Button
-                            inverted={false}
-                            outlined={true}
-                            size="large"
                             submit={true}
                             type="primary"
                         >

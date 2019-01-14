@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import 'assets/css/App.css';
 import Headerx from './layout/Headerx.js';
 import Mainx from './layout/Mainx.js';
 import Footerx from './layout/Footerx.js';
-import './App.css';
 
 class App extends Component {
 	render() {

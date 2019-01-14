@@ -1,5 +1,5 @@
 {
-  "name": "neighborhood_map",
+  "name": "TBoMS",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,18 +7,20 @@
     "@fortawesome/free-solid-svg-icons": "^5.6.3",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "node-sass": "^4.11.0",
+    "node-sass-chokidar": "^1.3.4",
     "react": "^16.7.0",
-    "react-bulma-components": "^2.3.0",
+    "react-bulma-components": "^3.0.1-3",
     "react-dom": "^16.7.0",
-    "react-google-maps": "^9.4.5",
     "react-scripts": "^2.1.3",
     "snazzy-info-window": "^1.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build-css": "node-sass-chokidar --include-path ./src/assets/scss --include-path ./node_modules src/assets/scss/ -o src/assets/css",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/assets/scss --include-path ./node_modules src/assets/scss/ -o src/assets/css --watch --recursive",
+    "start": "NODE_PATH=./src react-scripts start",
+    "build": "NODE_PATH=./src react-scripts build",
+    "test": "NODE_PATH=./src react-scripts test",
+    "eject": "NODE_PATH=./src react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
