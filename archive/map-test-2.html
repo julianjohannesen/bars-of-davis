@@ -411,7 +411,7 @@
             ], { name: "Cool View" })
 
             // This function takes in a COLOR, and then creates a new marker
-            // icon of thpat color. The icon will be 21 px wide by 34 high, have an origin
+            // icon of that color. The icon will be 21 px wide by 34 high, have an origin
             // of 0, 0 and be anchored at 10, 34).
             function makeMarkerIcon(markerColor) {
                 var markerImage = new google.maps.MarkerImage(
@@ -466,18 +466,11 @@
                 }
             );
 
-            // (1) Associate the map type id with a map style object 
-            // and (2) set it to display. 
-            // (1) Call mapTypes.set() on the map. The first argument 
-            // is the map type id and the second argument is the map 
-            // style object.
+            /* Associate the map type id with a map style object and set it to display using  mapTypes.set(). The first argument is the map type id and the second argument is the map style object. */
             map1.mapTypes.set('styled_map1', myMapStyle1);
             // (2) Then use setMapTypeId to display the map. Call 
             // setMapTypeId() on the map and pass it the map type id.
             map1.setMapTypeId('styled_map1');
-
-            map1.mapTypes.set('styled_map2', myMapStyle2);
-            map1.setMapTypeId('styled_map2');
 
             // Map over the locations and create a marker for each
             // location, storing it in the markers array. Expand
@@ -497,7 +490,7 @@
                     title: location.title
                 });
 
-            });
+            }); // end of init
 
             // Create one infoWindow instance without any details
             const anInfoWindow = new google.maps.InfoWindow()
@@ -523,7 +516,7 @@
             markersArray.forEach((marker, index) => {
                 marker.addListener(
                     "click",
-                    () => populateInfoWindow(anInfoWindow, marker, map1)
+                    () => populateInfoWindow(anInfoWindow, marker, map)
                 );
             });
 
@@ -541,7 +534,7 @@
 
                 // Ensure that no matter where our markers are placed
                 // the map will grow to encompass them
-                bounds1 = new google.maps.LatLngBounds();
+                bounds = new google.maps.LatLngBounds();
 
                 // Extend the map boundary to encompass all markers. 
                 // This has to happen after the markers have been created.
@@ -551,12 +544,12 @@
                     // the center and zoom level that you set, then
                     // you need to not set the map when you create the
                     // markers and instead set the map here
-                    marker.setMap(map1);
-                    bounds1.extend(marker.position);
+                    marker.setMap(map);
+                    bounds.extend(marker.position);
                 });
 
                 // Expand the map with fitBounds.
-                map1.fitBounds(bounds1);
+                map.fitBounds(bounds);
 
             }
             // hideListings will hide any listings when called

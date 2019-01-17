@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Level from 'react-bulma-components/lib/components/level/';
 import Field from 'react-bulma-components/lib/components/form/components/field/field';
 import Label from 'react-bulma-components/lib/components/form/components/label';
 import Control from 'react-bulma-components/lib/components/form/components/control';
@@ -23,10 +24,10 @@ export default class Formx extends Component {
 
     render() {
         return (
-            <form id="filterForm" className="section columns" noValidate onSubmit={this.handleSubmit}>
-                <Field className="column is-half">
-                    <Label htmlFor="filterInput" className="is-invisible">Filter</Label>
-                    <Control >
+            <form id="filterForm" className="level-item" noValidate onSubmit={this.handleSubmit}>
+                <Field className="has-addons">
+                    <Label htmlFor="filterInput" >Filter</Label>
+                    <Control  >
                         <Input
                             id="filterInput"
                             name="filterInput"
@@ -38,15 +39,9 @@ export default class Formx extends Component {
                             value={this.state.filterInput}
                         />
                     </Control>
-                </Field>
-
-
-                <Field className="column is-half">
-                    <Control>
-                        <Button
-                            submit={true}
-                            type="primary"
-                        >
+                
+                    <Control  >
+                        <Button submit={true} type="primary">
                             Submit
                         </Button>
                     </Control>
