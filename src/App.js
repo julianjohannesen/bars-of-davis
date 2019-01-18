@@ -7,11 +7,10 @@ import Footerx from './layout/Footerx.js';
 class App extends Component {
 
 	state = {
-		myLocations: [
+		bars: [
 			// A sample
 			// 0: {
 			//   venue: {
-			//		name: "Olde Magoun Saloon",
 			//      location: {
 			//			address: "518 Medford St"
 			//			cc:"US"
@@ -25,6 +24,7 @@ class App extends Component {
 			//			postalCode:"02145"
 			//			state:"MA"
 			//		},
+			//		name: "Olde Magoun Saloon",
 			//		photos: {},
 			//		venuepage: {}
 			//   }		
@@ -32,25 +32,26 @@ class App extends Component {
 		]
 	}
 
-	lat = 42.397359;
-	lng = -71.104336;
-	myMap = {};
-	myBounds = {};
-	myMarkersArray
+	// The center of the intersection of Broadway and Medford
+	lat = 42.3973445;
+	lng = -71.1044484;
+	magounMap = {};
+	bounds = {};
+	barMarkers = [];
+	drawingMngr = {};
 	polygon = null;
 
-
 	initMap = () => {
-		this.myMap = new window.google.maps.Map(
+		this.magounMap = new window.google.maps.Map(
 			document.getElementById("map"),
 			{
 				center: { "lat": this.lat, "lng": this.lng },
 				zoom: 15,
-				mapTypeControlOptions: { mapTypeIds: ['roadmap', 'styled_myMap',] }
+				mapTypeControlOptions: { mapTypeIds: ['styled_magounMap','roadmap', ] }
 			}
 		);
 
-		const myMapStyle = new window.google.maps.StyledMapType([
+		const magounMapStyle = new window.google.maps.StyledMapType([
 			{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
 			{ elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
 			{ elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
@@ -145,11 +146,10 @@ class App extends Component {
 			}
 		],
 			{ name: "Night Mode" });
-		this.myMap.mapTypes.set('styled_myMap', myMapStyle);
-		this.myMap.setMapTypeId('styled_myMap');
+		this.magounMap.mapTypes.set('styled_magounMap', magounMapStyle);
+		this.magounMap.setMapTypeId('styled_magounMap');
 
-		const makeMyMarkerIcon = (markerColor) => {
-			console.log("Create some custom icons");
+		const makeMarkerIcon = (markerColor) => {
 			const markerImage = new window.google.maps.MarkerImage(
 				'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
 				'|40|_|%E2%80%A2',
@@ -159,79 +159,110 @@ class App extends Component {
 				new window.google.maps.Size(21, 34));
 			return markerImage;
 		}
-		const defaultIcon = makeMyMarkerIcon('0091ff');
-		const highlightedIcon = makeMyMarkerIcon('FFFF24');
+		const defaultIcon = makeMarkerIcon('0091ff');
+		const highlightedIcon = makeMarkerIcon('FFFF24');
 
 		// see https://developers.google.com/maps/documentation/javascript/reference/marker
-		this.myMarkersArray = this.state.myLocations.map((location, index) => {
+		this.barMarkers = this.state.bars.map((bar, index) => {
 			return new window.google.maps.Marker({
 				animation: window.google.maps.Animation.DROP,
 				icon: defaultIcon,
 				id: index,
-				map: this.myMap,
-				position: {lat: location.venue.location.lat, lng:location.venue.location.lng},
-				title: location.venue.name
+				map: this.magounMap,
+				position: {lat: bar.venue.location.lat, lng:bar.venue.location.lng},
+				title: `${bar.venue.name} at ${bar.venue.location.address}`
 			})
 		}) 
 
 		// see https://developers.google.com/maps/documentation/javascript/reference/info-window
-		const myInfoWindow = new window.google.maps.InfoWindow();
-		console.log("This is my info window object: ", myInfoWindow);
-		const populateMyInfoWindow = (infoWind, marker, map) => {
-			if (infoWind !== marker) {
-				// this will be an item from the myMarkersArray
-				infoWind.marker = marker;
-				infoWind.setContent(`${marker.title}`);
-				infoWind.open(map, marker);
-				infoWind.addListener("closeclick", () => infoWind.marker = null);
+		const barInfo = new window.google.maps.InfoWindow();
+		const populateBarInfo = (info, marker, map) => {
+			if (info !== marker) {
+				// this will be an item from the barMarkers
+				info.marker = marker;
+				info.setContent(`${marker.title}`);
+				info.open(map, marker);
+				info.addListener("closeclick", () => info.marker = null);
 			}
 		}
 
-		this.myMarkersArray.forEach((marker, index) => {
-			console.log("Call populate info window on each marker and set the marker icons")
-			marker.addListener("click", () => populateMyInfoWindow(myInfoWindow, marker, this.myMap));
+		this.barMarkers.forEach((marker, index) => {
+			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.magounMap));
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
 
-		// const myDrawingMngr = new window.google.maps.Drawing.DrawingManager({
-		// 	drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
-		// 	drawingControl: true,
-		// 	drawingControlOptions: {
-		// 		position: window.google.maps.ControlPosition.TOP_LEFT,
-		// 		drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
-		// 	},
-		// });
-
-		// this.toggleDrawing = () => {
-		// 	if (myDrawingMngr.map) {
-		// 		myDrawingMngr.setMap(null);
-		// 		if (this.polygon) this.polygon.setMap(null);
-		// 	} else {
-		// 		myDrawingMngr.setMap(this.myMap);
-		// 	}
-		// }
+		this.drawingMngr = new window.google.maps.drawing.DrawingManager({
+			drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
+			drawingControl: true,
+			drawingControlOptions: {
+				position: window.google.maps.ControlPosition.TOP_LEFT,
+				drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
+			},
+		});
 
 	}
 
 	showListings = () => {
-		this.myBounds = new window.google.maps.LatLngBounds();
-		this.myMarkersArray.forEach(marker => {
-			marker.setMap(this.myMap);
-			this.myBounds.extend(marker.position);
+		this.bounds = new window.google.maps.LatLngBounds();
+		this.barMarkers.forEach(marker => {
+			marker.setMap(this.magounMap);
+			this.bounds.extend(marker.position);
 		});
-		this.myMap.fitBounds(this.myBounds);
+		this.magounMap.fitBounds(this.bounds);
 	}
 
-	hideListings = () => this.myMarkersArray.forEach(marker => marker.setMap(null));
+	hideListings = () => this.barMarkers.forEach(marker => marker.setMap(null));
+
+	handlePolygon = (event) => {
+		const searchWithinPolygon = (markers) => {
+			for (let i = 0; i < markers.length; i++) {
+				if(window.google.maps.geometry.poly.containsLocation(markers[i].position, this.polygon)) {
+					markers[i].setMap(this.magounMap) 
+				} else {
+					markers[i].setMap(null);
+				}
+			}
+		}
+
+		if (this.polygon) {
+			this.polygon.setMap(null);
+			this.hideListings();
+		}
+		this.drawingMngr.setDrawingMode(null);
+		this.polygon = event.overlay;
+		this.polygon.setEditable(true);
+		searchWithinPolygon(this.barMarkers);
+		this.polygon.getPath().addListener('set_at', searchWithinPolygon);
+		this.polygon.getPath().addListener('insert_at', searchWithinPolygon);
+	}
+
+	toggleDrawing = () => {
+		if (this.drawingMngr.map) {
+			this.drawingMngr.setMap(null);
+			if (this.polygon) this.polygon.setMap(null);
+		} else {
+			this.drawingMngr.setMap(this.magounMap);
+			this.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
+		}
+	}
+
+	loadScript = (url) => {
+		const indexjs = window.document.getElementsByTagName("script")[0];
+		const script = window.document.createElement("script");
+		script.src = url;
+		script.async = true;
+		script.defer = true;
+		indexjs.parentNode.insertBefore(script, indexjs);
+	}
 
 	loadMap = () => {
 		const key = "AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU";
-		//const libraries = ["drawing", "geometry", "geocoder"];
+		const libraries = ["drawing", "geometry", "geocoder"];
 		const version = "3";
-		// When the script loads, it will look in the window object for a function called initMap, so we need to assign window.initMap to our initMap function.
+		// Something I never would have figured out without Yahya, When the script loads, it will look in the window object for a function called initMap, so we need to assign window.initMap to our initMap function.
 		window.initMap = this.initMap
-		loadScript(`https://maps.googleapis.com/maps/api/js?key=${key}&libraries=drawing,geometry,geocoder&v=${version}&callback=initMap`);
+		this.loadScript(`https://maps.googleapis.com/maps/api/js?key=${key}&libraries=${libraries.join(",")}&v=${version}&callback=initMap`);
 
 	}
 
@@ -248,13 +279,13 @@ class App extends Component {
 			query: "bars"
 		}
 		axios.get(endpoint + new URLSearchParams(params))
-			.then((response) => this.setState({myLocations: response.data.response.groups[0].items}))
+			// One of the most useful things I learned in Yahya Elharony's tutorial video series was that we can supply an optional callback to setState that will execute after state is set. Here we load the map, only after successfully fetching our locations from Four Square.
+			.then((response) => this.setState({bars: response.data.response.groups[0].items}, this.loadMap))
 			.catch((error) => console.log(error));
 	}
 
 	componentDidMount() {
 		this.loadData();
-		setTimeout(this.loadMap, 2000);
 	}
 
 	render() {
@@ -266,7 +297,7 @@ class App extends Component {
 						<input id="show-listings" onClick={this.showListings} type="button" value="Show Locations" />
 						<input id="hide-listings" onClick={this.hideListings} type="button" value="Hide Locations" />
 
-						<input id="toggle-drawing" /*onClick={this.toggleDrawing}*/ type="button" value="Drawing Tools" />
+						<input id="toggle-drawing" onClick={this.toggleDrawing} type="button" value="Drawing Tools" />
 
 						<input id="zoom-to-area-text" type="text" placeholder="Enter an area" />
 						<input id="zoom-to-area" /*onClick={zoomToArea}*/ type="button" value="zoom" />
@@ -299,15 +330,6 @@ class App extends Component {
 			</div>
 		)
 	}
-}
-
-const loadScript = (url) => {
-	const indexjs = window.document.getElementsByTagName("script")[0];
-	const script = window.document.createElement("script");
-	script.src = url;
-	script.async = true;
-	script.defer = true;
-	indexjs.parentNode.insertBefore(script, indexjs);
 }
 
 export default App;
