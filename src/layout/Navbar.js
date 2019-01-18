@@ -1,42 +1,42 @@
 import React, { Component } from 'react';
 
-export default class Headerx extends Component {
+export default class Navbar extends Component {
 
 	state = {
 		burgerOpen: false,
 	}
 
-	componentDidMount() {
-		// A vanilla JS function to toggle hamburger etc.
-		// Get all "navbar-burger" elements
-		const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+	// componentDidMount() {
+	// 	// A vanilla JS function to toggle hamburger etc.
+	// 	// Get all "navbar-burger" elements
+	// 	const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-		// Check if there are any navbar burgers
-		if ($navbarBurgers.length > 0) {
+	// 	// Check if there are any navbar burgers
+	// 	if ($navbarBurgers.length > 0) {
 
-			// Add a click event on each of them
-			$navbarBurgers.forEach(el => {
-				el.addEventListener('click', () => {
+	// 		// Add a click event on each of them
+	// 		$navbarBurgers.forEach(el => {
+	// 			el.addEventListener('click', () => {
 
-					// Get the target from the "data-target" attribute
-					const target = el.dataset.target;
-					const $target = document.getElementById(target);
+	// 				// Get the target from the "data-target" attribute
+	// 				const target = el.dataset.target;
+	// 				const $target = document.getElementById(target);
 
-					// Toggle the "is-active" className on both the "navbar-burger" and the "navbar-menu"
-					el.classNameList.toggle('is-active');
-					$target.classNameList.toggle('is-active');
+	// 				// Toggle the "is-active" className on both the "navbar-burger" and the "navbar-menu"
+	// 				el.classNameList.toggle('is-active');
+	// 				$target.classNameList.toggle('is-active');
 
-				});
-			});
-		}
-	}
+	// 			});
+	// 		});
+	// 	}
+	// }
 
 	render() {
 		return (
-			// Bulma.io's suggested navbar structure with bits of Daniel Supernault's 'Band' theme and my own edits to make it React-friendly
+			// Bulma.io's suggested navbar structure with some inspiration from Daniel Supernault's 'Band' theme and my own edits to make it React-friendly
 			<nav className="navbar is-dark" role="navigation">
 				<div className="navbar-brand">
-					<a className="navbar-item" href="/">
+					<a className="navbar-item is-size-1" href="/">
 						The Bars of Magoun Square
 					</a>
 					{/* Should I add the burger class? What is the burger class doing here? */}

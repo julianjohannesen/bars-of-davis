@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import 'assets/css/bulma.min.css';
 import 'assets/css/App.css';
 import axios from 'axios';
-import Headerx from './layout/Headerx.js';
+import Navbar from './layout/Navbar.js';
+import Hero from './layout/Hero.js';
 import Footerx from './layout/Footerx.js';
 
 class App extends Component {
@@ -291,7 +293,8 @@ class App extends Component {
 	render() {
 		return (
 			<div className="App">
-				<Headerx />
+				<Navbar />
+				<Hero />
 				<main>
 					<div id="options-box">
 						<input id="show-listings" onClick={this.showListings} type="button" value="Show Locations" />

@@ -13,30 +13,50 @@
 </head>
 
 <body>
-    <header class="navbar is-dark" >
+    <nav class="navbar is-dark">
         <div class="navbar-brand">
-            <h1 class="navbar-item">
-                <a class="" href="/">The Bars of Magoun Square</a>
-            </h1>
-            <!-- Hamburger -->
-            <div 
-                aria-expanded="false"
-                aria-label="menu"
-                class="navbar-burger burger"
-                data-target="navbarExampleTransparentExample"
-                role="button"
-            >
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
+            <a class="navbar-item" href="https://bulma.io">
+                <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox"
+                    width="112" height="28">
+            </a>
+            <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
 
         <div id="navbarExampleTransparentExample" class="navbar-menu">
-            <nav class="navbar-start" role="navigation" aria-label="main navigation">
-                <a class="navbar-item" href="">Home </a>
-                <a class="navbar-item" href="">About</a> 
-            </nav>
+            <div class="navbar-start">
+                <a class="navbar-item" href="https://bulma.io/">
+                    Home
+                </a>
+                <a class="navbar-item" href="https://bulma.io/">
+                    Band
+                </a>
+                <a class="navbar-item" href="https://bulma.io/">
+                    Tour
+                </a>
+                <a class="navbar-item" href="https://bulma.io/">
+                    Contact
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="/documentation/overview/start/">
+                        More
+                    </a>
+                    <div class="navbar-dropdown is-boxed">
+                        <a class="navbar-item" href="/documentation/overview/start/">
+                            Mechandise
+                        </a>
+                        <a class="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
+                            Extras
+                        </a>
+                        <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
+                            Media
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <div class="navbar-end">
                 <div class="navbar-item">
@@ -48,32 +68,34 @@
                 </div>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Hero image -->
     <section class="hero">
         <figure class="image">
-            <img src="./oms-960x340.jpg">
+            <img src="https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
         </figure>
     </section>
 
-    <!-- Text block below hero image and tour dates -->
     <section class="section">
         <div class="container has-text-centered">
             <h2 class="title">The Band</h2>
-            <p>
-                We have created a fictional band website. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-                laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
+            <p>We have created a fictional band website. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut
+                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+                officia deserunt mollit anim id est
+                laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.</p>
 
-            <!-- Info cards section -->
             <div class="columns is-centered" style="padding: 2rem">
                 <div class="column">
                     <div class="card">
                         <div class="card-image">
                             <figure class="image is-2by1">
-                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Placeholder image">
+                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                                    alt="Placeholder image">
                             </figure>
                         </div>
                         <div class="card-content">
@@ -97,7 +119,8 @@
                     <div class="card">
                         <div class="card-image">
                             <figure class="image is-2by1">
-                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Placeholder image">
+                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                                    alt="Placeholder image">
                             </figure>
                         </div>
                         <div class="card-content">
@@ -121,7 +144,8 @@
                     <div class="card">
                         <div class="card-image">
                             <figure class="image is-2by1">
-                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Placeholder image">
+                                <img src="https://images.pexels.com/photos/167635/pexels-photo-167635.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                                    alt="Placeholder image">
                             </figure>
                         </div>
                         <div class="card-content">
@@ -146,8 +170,7 @@
         </div>
     </section>
 
-    <!-- Tour dates section -->
-    <!-- <section class="section">
+    <section class="section">
         <div class="container has-text-centered">
             <h2 class="title">Tour Dates</h2>
 
@@ -257,9 +280,8 @@
                 </div>
             </div>
         </div>
-    </section> -->
+    </section>
 
-    <!-- Contact section -->
     <section class="section">
         <div class="container has-text-centered">
             <h2 class="title">Contact</h2>
@@ -311,7 +333,6 @@
         </div>
     </section>
 
-    <!-- Site footer -->
     <footer class="footer">
         <div class="container">
             <div class="content has-text-centered">
@@ -337,7 +358,6 @@
             </div>
         </div>
     </footer>
-    
     <script src="../js/bulma.js"></script>
 </body>
 
