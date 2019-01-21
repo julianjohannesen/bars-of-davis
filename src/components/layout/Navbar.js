@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Navbar extends Component {
 
@@ -57,8 +58,8 @@ export default class Navbar extends Component {
 					<div className="navbar-start">
 					</div>
 					<div className="navbar-end">
-						<a className="navbar-item" href="/">Home</a>
-						<a className="navbar-item" href="/">About</a>
+						<Link className="navbar-item" to="/">Home</Link>
+						<Link className="navbar-item" to="/about">About</Link>
 						<div className="navbar-item">
 							<div className="field">
 								<div className="control">

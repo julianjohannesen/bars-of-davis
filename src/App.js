@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'assets/css/bulma.min.css';
 import 'assets/css/App.css';
 import axios from 'axios';
-import Navbar from './layout/Navbar.js';
-import Footerx from './layout/Footerx.js';
+import Navbar from './components/layout/Navbar.js';
+import Footerx from './components/layout/Footerx.js';
+import About from './pages/About';
+import NoMatch from './pages/NoMatch';
 
 class App extends Component {
 
@@ -53,7 +56,7 @@ class App extends Component {
 			}
 		);
 
-		// Create a custom style instance and set our map type and map type ID.
+		// A custom style instance and set our map type and map type ID.
 		const magounMapStyle = new window.google.maps.StyledMapType([
 			{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
 			{ elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
@@ -211,7 +214,7 @@ class App extends Component {
 
 	}
 
-	// Create a function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
+	// A function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
 	showListings = () => {
 		this.bounds = new window.google.maps.LatLngBounds();
 		this.barMarkers.forEach(marker => {
@@ -221,10 +224,10 @@ class App extends Component {
 		this.magounMap.fitBounds(this.bounds);
 	}
 
-	// Create a function to hide our bar markers by setting they map property back to null.
+	// A function to hide our bar markers by setting they map property back to null.
 	hideListings = () => this.barMarkers.forEach(marker => marker.setMap(null));
 
-	// Create a function to show only bar markers within a drawn polygon, hiding all others
+	// A function to show only bar markers within a drawn polygon, hiding all others
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			for (let i = 0; i < markers.length; i++) {
@@ -248,7 +251,7 @@ class App extends Component {
 		this.polygon.getPath().addListener('insert_at', searchWithinPolygon);
 	}
 
-	// Create a function to toggle the drawing controls on the map
+	// A function to toggle the drawing controls on the map
 	toggleDrawing = () => {
 		if (this.drawingMngr.map) {
 			this.drawingMngr.setMap(null);
@@ -263,14 +266,14 @@ class App extends Component {
 		const geocoder = new window.google.maps.Geocoder();
 		const address = document.getElementById("zoom-to-area-text").value;
 		console.log("zoomToArea fires and the value of address is: " + address);
-		if(address === '') {window.alert("You must enter an area or address.")}
+		if (address === '') { window.alert("You must enter an area or address.") }
 		else {
 			const geocodeOpts = {
 				address: address,
 				componentRestrictions: { locality: "Somerville" },
 			};
 			const zoomTo = (results, status) => {
-				if(status === window.google.maps.GeocoderStatus.OK) {
+				if (status === window.google.maps.GeocoderStatus.OK) {
 					this.magounMap.setCenter(results[0].geometry.location);
 					this.magounMap.setZoom(18);
 				} else {
@@ -281,8 +284,66 @@ class App extends Component {
 		}
 	}
 
+	displayMarkersWithinTime = (response) => {
+		const maxDuration = document.getElementById("max-duration").value;
+		const origins = response.originAddresses;
+		const destinations = response.destinationAddresses;
+		let atLeastOne = false;
+		for (let i = 0; i < origins.length; i++) {
+			const results = response.rows[i].elements;
+			for (let j = 0; j < destinations.length; j++) {
+				const element = results[j];
+				if (element.status === "OK") {
+					const distanceText = element.distance.text;
+					const duration = element.duration.value / 60;
+					const durationText = element.duration.text;
+					if (duration <= maxDuration) {
+						this.barMarkers[i].setMap(this.magounMap);
+						atLeastOne = true;
+						const infoWindow = new window.google.maps.InfoWindow({
+							content: durationText + " away " + distanceText,
+						});
+						infoWindow.open(this.magounMap, this.barMarkers[i]);
+						this.barMarkers[i].infoWindow = infoWindow;
+						window.google.maps.event.addListener(this.barMarkers[i], "click", () => this.infoWindow.close());
+					}
+				}
+			}
+		}
+	}
 
-	// Create a function to load our google maps api script
+	// A function to search from an origin within a radius determined by time and mode of travel
+	searchWithinTime = () => {
+		const distanceMatrixService = new window.google.maps.DistanceMatrixService();
+		const address = document.getElementById("search-within-time-text").value;
+		if (address === "") {
+			window.alert("Please enter an address.");
+		} else {
+			this.hideListings();
+			const origins = [];
+			for (let i = 0; i < this.barMarkers.length; i++) {
+				origins[i] = this.barMarkers[i].position;
+			}
+			const destination = address;
+			const mode = document.getElementById("mode").value;
+			distanceMatrixService.getDistanceMatrix({
+				origins: [origins[0], origins[1]],
+				destinations: [destination],
+				travelMode: window.google.maps.TravelMode[mode],
+				unitSystem: window.google.maps.UnitSystem.IMPERIAL,
+			}, (response, status) => {
+				if (status !== window.google.maps.DistanceMatrixStatus.OK) {
+					console.log("We called searchWithinTime with params " + origins + " and " + destination);
+					window.alert("Error has status" + status);
+				} else {
+					console.log("We called searchWithinTime and the response was", response);
+					this.displayMarkersWithinTime(response);
+				}
+			});
+		}
+	}
+
+	// A function to load our google maps api script
 	loadScript = (url) => {
 		const indexjs = window.document.getElementsByTagName("script")[0];
 		const script = window.document.createElement("script");
@@ -292,7 +353,7 @@ class App extends Component {
 		indexjs.parentNode.insertBefore(script, indexjs);
 	}
 
-	// Create a function to load our map by calling loadScript with our URL details
+	// A function to load our map by calling loadScript with our URL details
 	loadMap = () => {
 		const key = "AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU";
 		const libraries = ["drawing", "geometry", "geocoder"];
@@ -303,7 +364,7 @@ class App extends Component {
 
 	}
 
-	// Create a function to fetch our FourSquare data using axios
+	// A function to fetch our FourSquare data using axios
 	loadData = () => {
 		const endpoint = "https://api.foursquare.com/v2/venues/explore?";
 		const params = {
@@ -329,85 +390,100 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="App">
-				<Navbar />
-				<main>
-					<section id="options-box">
-						<div className="form-container">
-							<div className="field has-addons">
-								<div className="control">
-									<button className="button" id="show-listings" onClick={this.showListings} >Show</button>
-								</div>
+			<Router>
+				<div className="App">
+					<Navbar />
 
-								<div className="control">
-									<button className="button" id="hide-listings" onClick={this.hideListings} >Hide</button>
-								</div>
-							</div>
+					<Switch>
+						<Route exact path="/" render={props => (
+							<React.Fragment>
 
-							<div className="field">
-								<div className="control">
-									<button className="button" id="toggle-drawing" onClick={this.toggleDrawing} >Drawing Tools</button>
-								</div>
-							</div>
+								<main>
+									<section id="options-box">
+										<div className="form-container">
+											<div className="field has-addons">
+												<div className="control">
+													<button className="button" id="show-listings" onClick={this.showListings} >Show</button>
+												</div>
 
-							<div className="field">
-								<div className="control">
-									<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter location" />
-								</div>
-							</div>
+												<div className="control">
+													<button className="button" id="hide-listings" onClick={this.hideListings} >Hide</button>
+												</div>
+											</div>
 
-							<div className="field">
-								<div className="control">
-									<button className="button" id="zoom-to-area" onClick={this.zoomToArea} >Zoom</button>
-								</div>
-							</div>
-								
-							<div className="field">
-								<div className="control">
-									<p className="text text-padding">Within a</p>
-								</div>
-							</div>
-							<div className="select field">
-								<select className="control" id="max-duration">
-									<option value="10">10 min</option>
-									<option value="15">15 min</option>
-									<option value="30">30 min</option>
-									<option value="60">1 hour</option>
-								</select>
-							</div>
-							<div className="select field">
-								<select className="control" defaultValue="WALKING" id="mode">
-									<option value="DRIVING">drive</option>
-									<option value="WALKING">walk</option>
-									<option value="BICYCLING">bike</option>
-									<option value="TRANSIT">transit</option>
-								</select>
-							</div>
-							<div className="field">
-								<div className="control">
-									<p className="text text-padding">of</p>
-								</div>
-							</div>
+											<div className="field">
+												<div className="control">
+													<button className="button" id="toggle-drawing" onClick={this.toggleDrawing} >Drawing Tools</button>
+												</div>
+											</div>
 
-							<div className="field">
-								<div className="control">
-									<input className="input" id="search-within-time-text" type="text" placeholder="Enter location" />
-								</div>
-							</div>
+											<div className="field">
+												<div className="control">
+													<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter location" />
+												</div>
+											</div>
 
-							<div className="field">
-								<div className="control">
-									<button className="button" id="search-within-time" /*onClick={searchWithinTime}*/ >Go</button>
-								</div>
-							</div>
-						</div>
-					</section>
+											<div className="field">
+												<div className="control">
+													<button className="button" id="zoom-to-area" onClick={this.zoomToArea} >Zoom</button>
+												</div>
+											</div>
 
-					<section id="map" style={{ height: "80vh" }}>
-					</section>
-				</main>
-				<Footerx />
-			</div>
+											<div className="field">
+												<div className="control">
+													<p className="text text-padding">Within a</p>
+												</div>
+											</div>
+											<div className="select field">
+												<select className="control" id="max-duration">
+													<option value="10">10 min</option>
+													<option value="15">15 min</option>
+													<option value="30">30 min</option>
+													<option value="60">1 hour</option>
+												</select>
+											</div>
+											<div className="select field">
+												<select className="control" defaultValue="WALKING" id="mode">
+													<option value="DRIVING">drive</option>
+													<option value="WALKING">walk</option>
+													<option value="BICYCLING">bike</option>
+													<option value="TRANSIT">transit</option>
+												</select>
+											</div>
+											<div className="field">
+												<div className="control">
+													<p className="text text-padding">of</p>
+												</div>
+											</div>
+
+											<div className="field">
+												<div className="control">
+													<input className="input" id="search-within-time-text" type="text" placeholder="Enter location" />
+												</div>
+											</div>
+
+											<div className="field">
+												<div className="control">
+													<button className="button" id="search-within-time" onClick={this.searchWithinTime} >Go</button>
+												</div>
+											</div>
+										</div>
+									</section>
+
+									<section id="map" style={{ height: "80vh" }}>
+									</section>
+								</main>
+
+							</React.Fragment>
+						)} />
+						<Route exact path="/About" component={About} />
+						<Route render={props => <NoMatch {...props} theLocation={this.props.location} />} />
+					</Switch>
+
+
+					<Footerx />
+				</div>
+			</Router>
 		)
 	}
 }
