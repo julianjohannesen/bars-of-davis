@@ -259,6 +259,29 @@ class App extends Component {
 		}
 	}
 
+	zoomToArea = () => {
+		const geocoder = new window.google.maps.Geocoder();
+		const address = document.getElementById("zoom-to-area-text").value;
+		console.log("zoomToArea fires and the value of address is: " + address);
+		if(address === '') {window.alert("You must enter an area or address.")}
+		else {
+			const geocodeOpts = {
+				address: address,
+				componentRestrictions: { locality: "Somerville" },
+			};
+			const zoomTo = (results, status) => {
+				if(status === window.google.maps.GeocoderStatus.OK) {
+					this.magounMap.setCenter(results[0].geometry.location);
+					this.magounMap.setZoom(18);
+				} else {
+					window.alert("We could not find the location. Please try entering a more specific location.");
+				}
+			}
+			geocoder.geocode(geocodeOpts, zoomTo);
+		}
+	}
+
+
 	// Create a function to load our google maps api script
 	loadScript = (url) => {
 		const indexjs = window.document.getElementsByTagName("script")[0];
@@ -335,7 +358,7 @@ class App extends Component {
 
 							<div className="field">
 								<div className="control">
-									<button className="button" id="zoom-to-area" /*onClick={zoomToArea}*/ >Zoom</button>
+									<button className="button" id="zoom-to-area" onClick={this.zoomToArea} >Zoom</button>
 								</div>
 							</div>
 								
@@ -353,9 +376,9 @@ class App extends Component {
 								</select>
 							</div>
 							<div className="select field">
-								<select className="control" id="mode">
+								<select className="control" defaultValue="WALKING" id="mode">
 									<option value="DRIVING">drive</option>
-									<option value="WALKING" selected>walk</option>
+									<option value="WALKING">walk</option>
 									<option value="BICYCLING">bike</option>
 									<option value="TRANSIT">transit</option>
 								</select>

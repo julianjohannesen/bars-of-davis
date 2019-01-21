@@ -41,7 +41,6 @@ export default class Navbar extends Component {
 					</a>
 					{/* Should I add the burger class? What is the burger class doing here? */}
 					<div 
-						aria-role=""
 						className="navbar-burger" 
 						data-target="navbarExampleTransparentExample" 
 						role="button" 
