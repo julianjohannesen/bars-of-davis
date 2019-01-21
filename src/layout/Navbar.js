@@ -34,13 +34,14 @@ export default class Navbar extends Component {
 	render() {
 		return (
 			// Bulma.io's suggested navbar structure with some inspiration from Daniel Supernault's 'Band' theme and my own edits to make it React-friendly
-			<nav className="navbar is-dark" role="navigation">
+			<nav className="navbar is-dark" role="navigation" style={{backgroundColor: "#242f3e"}}>
 				<div className="navbar-brand">
 					<a className="navbar-item is-size-1" href="/">
 						The Bars of Magoun Square
 					</a>
 					{/* Should I add the burger class? What is the burger class doing here? */}
 					<div 
+						aria-role=""
 						className="navbar-burger" 
 						data-target="navbarExampleTransparentExample" 
 						role="button" 
@@ -55,10 +56,10 @@ export default class Navbar extends Component {
 
 				<div id="navbarExampleTransparentExample" className="navbar-menu">
 					<div className="navbar-start">
-						<a className="navbar-item" href="/">Home</a>
-						<a className="navbar-item" href="/">About</a>
 					</div>
 					<div className="navbar-end">
+						<a className="navbar-item" href="/">Home</a>
+						<a className="navbar-item" href="/">About</a>
 						<div className="navbar-item">
 							<div className="field">
 								<div className="control">

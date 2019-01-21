@@ -1,0 +1,9 @@
+.form-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex: 0 1 auto;
+  padding: 1em; }
+  .form-container .text-padding {
+    padding: calc(0.375em - 1px) 0.25em; }
