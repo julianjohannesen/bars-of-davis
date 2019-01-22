@@ -5,8 +5,10 @@ import 'assets/css/App.css';
 import axios from 'axios';
 import Navbar from './components/layout/Navbar.js';
 import Footerx from './components/layout/Footerx.js';
+import Mapx from './components/Mapx.js';
 import About from './pages/About';
 import NoMatch from './pages/NoMatch';
+import { timingSafeEqual } from 'crypto';
 
 class App extends Component {
 
@@ -36,28 +38,28 @@ class App extends Component {
 		]
 	}
 
-	// The center of the intersection of Broadway and Medford
-	lat = 42.3973445;
-	lng = -71.1044484;
-	magounMap = {};
+	// Davis Square lat long
+	lat = 42.396365;
+	lng = -71.122262;
+	davisMap = {};
 	bounds = {};
 	barMarkers = [];
 	drawingMngr = {};
 	polygon = null;
 
 	initMap = () => {
-		// Initialize our map by creating a new map instance and setting it's center point, zoom level, and the may type IDs that will appear on the map.
-		this.magounMap = new window.google.maps.Map(
+		// Initialize our map by creating a new map instance and setting it's center point, zoom level, and the map type IDs that will appear on the map.
+		this.davisMap = new window.google.maps.Map(
 			document.getElementById("map"),
 			{
-				center: { "lat": this.lat, "lng": this.lng },
+				center: { "lat": this.lat, "lng": this.lng  },
 				zoom: 15,
-				mapTypeControlOptions: { mapTypeIds: ['styled_magounMap', 'roadmap',] }
+				mapTypeControlOptions: { mapTypeIds: ['styled_davisMap', 'roadmap',] }
 			}
 		);
 
-		// A custom style instance and set our map type and map type ID.
-		const magounMapStyle = new window.google.maps.StyledMapType([
+		// Create a custom style instance and set our map type and map type ID.
+		const davisMapStyle = new window.google.maps.StyledMapType([
 			{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
 			{ elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
 			{ elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
@@ -152,8 +154,8 @@ class App extends Component {
 			}
 		],
 			{ name: "Night Mode" });
-		this.magounMap.mapTypes.set('styled_magounMap', magounMapStyle);
-		this.magounMap.setMapTypeId('styled_magounMap');
+		this.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
+		this.davisMap.setMapTypeId('styled_davisMap');
 
 		// Create custom markers icons for our markers.
 		const makeMarkerIcon = (markerColor) => {
@@ -176,9 +178,10 @@ class App extends Component {
 				animation: window.google.maps.Animation.DROP,
 				icon: defaultIcon,
 				id: index,
-				map: this.magounMap,
+				map: this.davisMap,
 				position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
-				title: `${bar.venue.name} at ${bar.venue.location.address}`
+				title: bar.venue.name,
+				other: bar
 			})
 		})
 
@@ -189,7 +192,7 @@ class App extends Component {
 			if (info !== marker) {
 				// this will be an item from the barMarkers array
 				info.marker = marker;
-				info.setContent(`${marker.title}`);
+				info.setContent(`<h3>${marker.title}</h3><p>${marker.other.venue.location.address}</p>`);
 				info.open(map, marker);
 				info.addListener("closeclick", () => info.marker = null);
 			}
@@ -197,7 +200,7 @@ class App extends Component {
 
 		// For each bar marker, add a click listener to populate the info window with the appropriate information. Also add mouse event listeners to toggle the icon color
 		this.barMarkers.forEach((marker, index) => {
-			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.magounMap));
+			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.davisMap));
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
@@ -218,10 +221,10 @@ class App extends Component {
 	showListings = () => {
 		this.bounds = new window.google.maps.LatLngBounds();
 		this.barMarkers.forEach(marker => {
-			marker.setMap(this.magounMap);
+			marker.setMap(this.davisMap);
 			this.bounds.extend(marker.position);
 		});
-		this.magounMap.fitBounds(this.bounds);
+		this.davisMap.fitBounds(this.bounds);
 	}
 
 	// A function to hide our bar markers by setting they map property back to null.
@@ -232,7 +235,7 @@ class App extends Component {
 		const searchWithinPolygon = (markers) => {
 			for (let i = 0; i < markers.length; i++) {
 				if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.polygon)) {
-					markers[i].setMap(this.magounMap)
+					markers[i].setMap(this.davisMap)
 				} else {
 					markers[i].setMap(null);
 				}
@@ -257,7 +260,7 @@ class App extends Component {
 			this.drawingMngr.setMap(null);
 			if (this.polygon) this.polygon.setMap(null);
 		} else {
-			this.drawingMngr.setMap(this.magounMap);
+			this.drawingMngr.setMap(this.davisMap);
 			this.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
 		}
 	}
@@ -265,7 +268,6 @@ class App extends Component {
 	zoomToArea = () => {
 		const geocoder = new window.google.maps.Geocoder();
 		const address = document.getElementById("zoom-to-area-text").value;
-		console.log("zoomToArea fires and the value of address is: " + address);
 		if (address === '') { window.alert("You must enter an area or address.") }
 		else {
 			const geocodeOpts = {
@@ -274,8 +276,8 @@ class App extends Component {
 			};
 			const zoomTo = (results, status) => {
 				if (status === window.google.maps.GeocoderStatus.OK) {
-					this.magounMap.setCenter(results[0].geometry.location);
-					this.magounMap.setZoom(18);
+					this.davisMap.setCenter(results[0].geometry.location);
+					this.davisMap.setZoom(18);
 				} else {
 					window.alert("We could not find the location. Please try entering a more specific location.");
 				}
@@ -298,14 +300,14 @@ class App extends Component {
 					const duration = element.duration.value / 60;
 					const durationText = element.duration.text;
 					if (duration <= maxDuration) {
-						this.barMarkers[i].setMap(this.magounMap);
+						this.barMarkers[i].setMap(this.davisMap);
 						atLeastOne = true;
 						const infoWindow = new window.google.maps.InfoWindow({
 							content: durationText + " away " + distanceText,
 						});
-						infoWindow.open(this.magounMap, this.barMarkers[i]);
+						infoWindow.open(this.davisMap, this.barMarkers[i]);
 						this.barMarkers[i].infoWindow = infoWindow;
-						window.google.maps.event.addListener(this.barMarkers[i], "click", () => this.infoWindow.close());
+						window.google.maps.event.addListener(this.barMarkers[i], "click", () => infoWindow.close());
 					}
 				}
 			}
@@ -321,27 +323,28 @@ class App extends Component {
 		} else {
 			this.hideListings();
 			const origins = [];
-			for (let i = 0; i < this.barMarkers.length; i++) {
+			// There's a limit of 25 origins/destinations per call, otherwise this line would include i < this.barMarkers.length, not i < 25
+			for (let i = 0; i < 25; i++) {
 				origins[i] = this.barMarkers[i].position;
 			}
 			const destination = address;
 			const mode = document.getElementById("mode").value;
 			distanceMatrixService.getDistanceMatrix({
-				origins: [origins[0], origins[1]],
+				// There's a limit of 25 origins and destinations per call
+				origins: origins,
 				destinations: [destination],
 				travelMode: window.google.maps.TravelMode[mode],
 				unitSystem: window.google.maps.UnitSystem.IMPERIAL,
 			}, (response, status) => {
 				if (status !== window.google.maps.DistanceMatrixStatus.OK) {
-					console.log("We called searchWithinTime with params " + origins + " and " + destination);
 					window.alert("Error has status" + status);
 				} else {
-					console.log("We called searchWithinTime and the response was", response);
 					this.displayMarkersWithinTime(response);
 				}
 			});
 		}
 	}
+
 
 	// A function to load our google maps api script
 	loadScript = (url) => {
@@ -395,89 +398,16 @@ class App extends Component {
 					<Navbar />
 
 					<Switch>
-						<Route exact path="/" render={props => (
-							<React.Fragment>
-
-								<main>
-									<section id="options-box">
-										<div className="form-container">
-											<div className="field has-addons" style={{marginRight:"1em"}}>
-												<div className="control">
-													<button className="button" id="show-listings" onClick={this.showListings} >Show</button>
-												</div>
-
-												<div className="control">
-													<button className="button" id="hide-listings" onClick={this.hideListings} >Hide</button>
-												</div>
-											</div>
-
-											<div className="field" style={{marginRight:"1em"}}>
-												<div className="control">
-													<button className="button" id="toggle-drawing" onClick={this.toggleDrawing} >Drawing Tools</button>
-												</div>
-											</div>
-
-											<div className="field has-addons" style={{marginRight:"1em"}}>
-												<div className="control">
-													<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter location" />
-												</div>
-											
-												<div className="control">
-													<button className="button" id="zoom-to-area" onClick={this.zoomToArea} >Zoom</button>
-												</div>
-											</div>
-
-											<div className="field">
-												<div className="control">
-													<p className="text text-margin">Within a </p>
-												</div>
-											</div>											
-											<div className="field has-addons">
-												<div className="select control">
-													<select className="" id="max-duration" style={{ borderTopRightRadius: "0", borderBottomRightRadius: "0"}}>
-														<option value="10">10 min</option>
-														<option value="15">15 min</option>
-														<option value="30">30 min</option>
-														<option value="60">1 hour</option>
-													</select>
-												</div>
-												<div className="select control">
-													<select className="" defaultValue="WALKING" id="mode"  style={{ borderTopLeftRadius: "0", borderBottomLeftRadius: "0"}}>
-														<option value="DRIVING">drive</option>
-														<option value="WALKING">walk</option>
-														<option value="BICYCLING">bike</option>
-														<option value="TRANSIT">transit</option>
-													</select>
-												</div>
-											</div>
-											<div className="field">
-												<div className="control">
-													<p className="text text-margin"> of </p>
-												</div>
-											</div>
-
-											<div className="field has-addons">
-												<div className="control">
-													<input className="input" id="search-within-time-text" type="text" placeholder="Enter location" />
-												</div>
-											
-												<div className="control">
-													<button className="button" id="search-within-time" onClick={this.searchWithinTime} >Go</button>
-												</div>
-											</div>
-										</div>
-									</section>
-
-									<section id="map" style={{ height: "80vh" }}>
-									</section>
-								</main>
-
-							</React.Fragment>
-						)} />
+						<Route exact path="/" render={(props) => <Mapx 
+							showListings = {this.showListings}
+							hideListings = {this.hideListings}
+							toggleDrawing = {this.toggleDrawing}
+							zoomToArea = {this.zoomToArea} 
+							searchWithinTime = {this.searchWithinTime}
+						/>} />
 						<Route exact path="/About" component={About} />
 						<Route render={props => <NoMatch {...props} theLocation={this.props.location} />} />
 					</Switch>
-
 
 					<Footerx />
 				</div>

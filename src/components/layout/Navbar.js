@@ -38,7 +38,7 @@ export default class Navbar extends Component {
 			<nav className="navbar is-dark" role="navigation" style={{backgroundColor: "#242f3e"}}>
 				<div className="navbar-brand">
 					<a className="navbar-item is-size-1" href="/">
-						The Bars of Magoun Square
+						The Bars of Davis Square
 					</a>
 					{/* Should I add the burger class? What is the burger class doing here? */}
 					<div 
