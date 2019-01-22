@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import OMS from '../assets/imgs/oms-960x340.jpg';
+import OMS from '../../assets/imgs/oms-960x340.jpg';
 
 export default class Herox extends Component {
   render() {

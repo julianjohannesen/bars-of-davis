@@ -1,12 +1,12 @@
 .form-container {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: flex-start;
     flex: 0 1 auto;
     padding: 1em;
 
-    .text-padding {
-        padding: calc(0.375em - 1px) .25em;
+    .text-margin {
+        margin: calc(0.375em - 1px) .6em;
     }
 }

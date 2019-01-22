@@ -8,4 +8,8 @@ Users can enter the name of a bar in the search box at the top right of the page
 
 ## Details
 
-The Bars of Davis Square was created using React and Bulma CSS. The map and all of the information that appears on it are made possible by Google's Google Maps JavaScript API and FourSquare's API. 
+The Bars of Davis Square was created using React and Bulma CSS. The information that appears on the map and the map itself are made possible by FourSquare's API and  Google's Google Maps JavaScript API. The application first fetches a list of Davis Square area bars from FourSquare's API, and, after setting state to capture the response data, calls a function that fetches and loads our map. Map markers are generated and assigned to each venue returned by FourSquare and a single Info Window instance is populated with the relevant information whenever a user clicks on a marker. The drawing tools, zoom functionality, and search-within-time-by-mode functionality are accomplished with the Google Maps API.
+
+## Thanks
+
+I'd like to thank Yahya Elharony for his series of tutorials on using the FourSquare and Google Maps APIs together.

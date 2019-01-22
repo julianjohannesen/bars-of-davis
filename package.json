@@ -12,6 +12,7 @@
     "react": "^16.7.0",
     "react-bulma-components": "^3.0.1-3",
     "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.3",
     "snazzy-info-window": "^1.1.1"
   },
