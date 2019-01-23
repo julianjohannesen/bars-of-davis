@@ -4,8 +4,8 @@ import BarList from './BarList.js';
 export default class Mapx extends Component {
 
 	render() {
-
-		const {bars, barDetails, showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
+		// removed barDetails
+		const {barMarkers, showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
 
 		return (
 			<main>
@@ -78,10 +78,11 @@ export default class Mapx extends Component {
 					</div>
 				</section>
 				
-				<section className="section columns">
+				<section className="section columns" style={{paddingTop:"0"}}>
 					<BarList 
-						// barDetails={barDetails} 
-						bars={bars} />
+						// barDetails={barDetails}
+						barMarkers={barMarkers} 
+					/>
 					<section className="column" id="map" style={{ height: "80vh" }}>
 					</section>
 				</section>

@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 
 export default class Bar extends Component {
+
     render() {
 
-        const bar = this.props.bar;
-        console.log(bar);
+        const itemStyle = {
+            padding: "0.5em",
+            border: "1px solid #242f3e",
+            borderBottom: "none",
+        }
+        const barMarker = this.props.barMarker;
 
         return (
-            <li className="menu-item">
-                <h3 className="heading is-size-5">{bar.venue.name}</h3>
-                <p>{bar.venue.location.address}</p>
-                <p>{}</p>
-                <p>{}</p>
+            <li className="menu-item" style={itemStyle}>
+                <h3>{barMarker.bar.venue.name}</h3>
             </li>
         )
     }

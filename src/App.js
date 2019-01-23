@@ -38,7 +38,7 @@ class App extends Component {
 			//   }		
 			// }
 		],
-		barDetails: []
+		//barDetails: []
 	}
 
 	// Davis Square lat long
@@ -52,7 +52,6 @@ class App extends Component {
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance and setting it's center point, zoom level, and the map type IDs that will appear on the map.
-		console.log("bars and barDetails: ", this.state.bars, this.state.barDetails)
 		this.davisMap = new window.google.maps.Map(
 			document.getElementById("map"),
 			{
@@ -185,7 +184,8 @@ class App extends Component {
 				map: this.davisMap,
 				position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
 				title: bar.venue.name,
-				other: bar
+				other: bar,
+				visible: true,
 			})
 		})
 
@@ -209,7 +209,7 @@ class App extends Component {
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
 
-		// Create a drawing manager instance to allow uses to draw a polygon within which they can search
+		// Create a drawing manager instance to allow users to draw a polygon within which they can search
 		this.drawingMngr = new window.google.maps.drawing.DrawingManager({
 			drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
 			drawingControl: true,
@@ -230,12 +230,16 @@ class App extends Component {
 		this.barMarkers.forEach(marker => {
 			marker.setMap(this.davisMap);
 			this.bounds.extend(marker.position);
+			marker.visible = true;
 		});
 		this.davisMap.fitBounds(this.bounds);
 	}
 
 	// A function to hide our bar markers by setting they map property back to null.
-	hideListings = () => this.barMarkers.forEach(marker => marker.setMap(null));
+	hideListings = () => this.barMarkers.forEach(marker => {
+		marker.setMap(null);
+		marker.visible = false;
+	});
 
 	// A function to show only bar markers within a drawn polygon, hiding all others
 	handlePolygon = (event) => {
@@ -432,8 +436,8 @@ class App extends Component {
 					<Navbar />
 					<Switch>
 						<Route exact path="/" render={() => <Mapx 
-							bars = {this.state.bars}
 							// barDetails={this.state.barDetails}
+							barMarkers={this.barMarkers}
 							showListings = {this.showListings}
 							hideListings = {this.hideListings}
 							toggleDrawing = {this.toggleDrawing}
