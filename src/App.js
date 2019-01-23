@@ -39,27 +39,29 @@ class App extends Component {
 			// }
 		],
 		//barDetails: []
+		barMarkers: [],
+		davisMap: {},
 	}
 
 	// Davis Square lat long
 	lat = 42.396365;
 	lng = -71.122262;
-	davisMap = {};
+	//davisMap = {};
 	bounds = {};
-	barMarkers = [];
+	//barMarkers = [];
 	drawingMngr = {};
 	polygon = null;
 
 	initMap = () => {
-		// Initialize our map by creating a new map instance and setting it's center point, zoom level, and the map type IDs that will appear on the map.
-		this.davisMap = new window.google.maps.Map(
-			document.getElementById("map"),
-			{
-				center: { "lat": this.lat, "lng": this.lng  },
-				zoom: 15,
-				mapTypeControlOptions: { mapTypeIds: ['styled_davisMap', 'roadmap',] }
-			}
-		);
+		// Initialize our map by creating a new map instance.
+		
+		// mapOpts contains our map configuration
+		const mapOpts = {
+			center: { "lat": this.lat, "lng": this.lng  },
+			zoom: 12,
+			mapTypeControlOptions: { mapTypeIds: ['styled_davisMap', 'roadmap',] }
+		}
+		this.setState({davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts)});
 
 		// Create a custom style instance and set our map type and map type ID.
 		const davisMapStyle = new window.google.maps.StyledMapType([
