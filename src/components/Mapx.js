@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import BarList from './BarList.js';
 
 export default class Mapx extends Component {
 
 	render() {
 
-		const {showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
+		const {bars, barDetails, showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
 
 		return (
 			<main>
@@ -28,7 +29,7 @@ export default class Mapx extends Component {
 
 						<div className="field has-addons" style={{ marginRight: "1em" }}>
 							<div className="control">
-								<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter location" />
+								<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter street address" />
 							</div>
 
 							<div className="control">
@@ -67,7 +68,7 @@ export default class Mapx extends Component {
 
 						<div className="field has-addons">
 							<div className="control">
-								<input className="input" id="search-within-time-text" type="text" placeholder="Enter location" />
+								<input className="input" id="search-within-time-text" type="text" placeholder="Enter street address" />
 							</div>
 
 							<div className="control">
@@ -76,13 +77,15 @@ export default class Mapx extends Component {
 						</div>
 					</div>
 				</section>
-
-				<section id="map" style={{ height: "80vh" }}>
+				
+				<section className="section columns">
+					<BarList 
+						// barDetails={barDetails} 
+						bars={bars} />
+					<section className="column" id="map" style={{ height: "80vh" }}>
+					</section>
 				</section>
 			</main>
-
-
-
 		)
 	}
 }

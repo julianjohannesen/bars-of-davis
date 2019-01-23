@@ -10,13 +10,15 @@ import About from './pages/About';
 import NoMatch from './pages/NoMatch';
 import { timingSafeEqual } from 'crypto';
 
-class App extends Component {
+class App extends Component { 
 
 	state = {
 		bars: [
 			// A sample
 			// 0: {
 			//   venue: {
+			//		categories: []
+			//		id: asdf
 			//      location: {
 			//			address: "518 Medford St"
 			//			cc:"US"
@@ -35,7 +37,8 @@ class App extends Component {
 			//		venuepage: {}
 			//   }		
 			// }
-		]
+		],
+		barDetails: []
 	}
 
 	// Davis Square lat long
@@ -49,6 +52,7 @@ class App extends Component {
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance and setting it's center point, zoom level, and the map type IDs that will appear on the map.
+		console.log("bars and barDetails: ", this.state.bars, this.state.barDetails)
 		this.davisMap = new window.google.maps.Map(
 			document.getElementById("map"),
 			{
@@ -217,6 +221,9 @@ class App extends Component {
 
 	}
 
+	///////////////
+	// MAP Tools //
+	///////////////
 	// A function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
 	showListings = () => {
 		this.bounds = new window.google.maps.LatLngBounds();
@@ -345,7 +352,9 @@ class App extends Component {
 		}
 	}
 
-
+	////////////////////////////////////////////////
+	// INSERT SCRIPT TAG AND LOAD GOOGLE MAPS API //
+	////////////////////////////////////////////////
 	// A function to load our google maps api script
 	loadScript = (url) => {
 		const indexjs = window.document.getElementsByTagName("script")[0];
@@ -367,6 +376,33 @@ class App extends Component {
 
 	}
 
+	////////////////////////////
+	// FETCH FOUR SQUARE DATA //
+	////////////////////////////
+	// A function to fetch details for each bar.
+    //The plan here was to use the IDs of the bars in my list of bars (which I fetched using the /explore endpoint) to get detailed information about each bar and then filter based on thingsl like price and rating.  Unfortunately, FourSquare's generosity doesn't stretch this far. I kept getting status 429 - too many requests.
+	// loadDetails = () => {
+	// 	const endpoint = "https://api.foursquare.com/v2/venues/";
+	// 	const params = {
+	// 		client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
+	// 		client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
+	// 		v: 20190117,
+	// 	}
+	// 	for(let i=0; i<this.state.bars.length; i++){
+	// 		let theId = this.state.bars[i].venue.id + "?";
+	// 		let urlParams = new URLSearchParams(params);
+	// 		let theUrl = endpoint + theId + urlParams;
+	// 		axios.get(theUrl)
+	// 			.then((response) => {
+	// 				// I'm setting state for each bar detail item that's being fetched and that triggers a lot of unnecessary rerenders. What can I do about that?
+	// 				console.log("The URL was: ", theUrl, "The successful response is: ", response)
+	// 				this.setState({ barDetails: response.data.response.venue })
+	// 			})
+	// 			.catch((error) => console.log(error));
+	// 			if(i === this.state.bars.length - 1) this.loadMap();
+	// 	}
+	// }
+	
 	// A function to fetch our FourSquare data using axios
 	loadData = () => {
 		const endpoint = "https://api.foursquare.com/v2/venues/explore?";
@@ -375,13 +411,11 @@ class App extends Component {
 			client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
 			v: 20190117,
 			ll: `${this.lat},${this.lng}`,
-			//near: "",
-			//radius: "",
-			//section: "",
-			query: "bars"
+			section: "drinks"
 		}
 		axios.get(endpoint + new URLSearchParams(params))
 			// One of the most useful things I learned in Yahya Elharony's tutorial video series was that we can supply an optional callback to setState that will execute after state is set. Here we load the map, only after successfully fetching our locations from FourSquare.
+			// Originally the callback would have been loadDetails which would in turn call loadMap, but I hit request limits
 			.then((response) => this.setState({ bars: response.data.response.groups[0].items }, this.loadMap))
 			.catch((error) => console.log(error));
 	}
@@ -396,9 +430,10 @@ class App extends Component {
 			<Router>
 				<div className="App">
 					<Navbar />
-
 					<Switch>
-						<Route exact path="/" render={(props) => <Mapx 
+						<Route exact path="/" render={() => <Mapx 
+							bars = {this.state.bars}
+							// barDetails={this.state.barDetails}
 							showListings = {this.showListings}
 							hideListings = {this.hideListings}
 							toggleDrawing = {this.toggleDrawing}
@@ -408,7 +443,6 @@ class App extends Component {
 						<Route exact path="/About" component={About} />
 						<Route render={props => <NoMatch {...props} theLocation={this.props.location} />} />
 					</Switch>
-
 					<Footerx />
 				</div>
 			</Router>
