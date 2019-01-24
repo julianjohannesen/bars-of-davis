@@ -220,6 +220,7 @@ class App extends Component {
 		}
 
 		// For each bar marker, add a click listener to populate the info window with the appropriate information. Also add mouse event listeners to toggle the icon color
+		// Changing state here by adding listeners, but using the Google Maps API's addListener to add map listeners. How do you notify react of this change?
 		this.state.barMarkers.forEach((marker, index) => {
 			marker.addListener("click", () => populateBarInfo(this.state.barInfo, marker, this.state.davisMap));
 			
@@ -267,12 +268,13 @@ class App extends Component {
 	})
 
 	// A function to show only bar markers within a drawn polygon, hiding all others
+	// Changing state without notifying react
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			for (let i = 0; i < markers.length; i++) {
 				// containsLocation returns a boolean. 
 				if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon)) {
-					markers[i].setMap(this.davisMap)
+					markers[i].setMap(this.state.davisMap)
 				} else {
 					markers[i].setMap(null);
 				}
