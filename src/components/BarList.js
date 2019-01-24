@@ -14,7 +14,7 @@ export default class BarList extends Component {
         return (
             <section id="barList" className="section column is-narrow" style={{padding:"0",}}>
                 <ul className="menu-list">
-                    {this.renderBars()}
+                    {/*this.renderBars()*/}
                 </ul>
             </section>
         )

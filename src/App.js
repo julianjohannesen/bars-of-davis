@@ -47,7 +47,7 @@ class App extends Component {
 	lat = 42.396365;
 	lng = -71.122262;
 	//davisMap = {};
-	bounds = {};
+	/// bounds = {};
 	//barMarkers = [];
 	drawingMngr = {};
 	polygon = null;
@@ -58,10 +58,14 @@ class App extends Component {
 		// mapOpts contains our map configuration
 		const mapOpts = {
 			center: { "lat": this.lat, "lng": this.lng  },
+			mapTypeControlOptions: { 
+				mapTypeIds: ['styled_davisMap', 'roadmap',] 
+			},
 			zoom: 12,
-			mapTypeControlOptions: { mapTypeIds: ['styled_davisMap', 'roadmap',] }
 		}
 		this.setState({davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts)});
+
+		console.log("What's going on?", this.state.davisMap)
 
 		// Create a custom style instance and set our map type and map type ID.
 		const davisMapStyle = new window.google.maps.StyledMapType([
@@ -159,8 +163,9 @@ class App extends Component {
 			}
 		],
 			{ name: "Night Mode" });
-		this.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
-		this.davisMap.setMapTypeId('styled_davisMap');
+		// We're adjusting the map state without notifying React. We should be setting state.
+		this.state.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
+		this.state.davisMap.setMapTypeId('styled_davisMap');
 
 		// Create custom markers icons for our markers.
 		const makeMarkerIcon = (markerColor) => {
@@ -178,18 +183,20 @@ class App extends Component {
 
 		// Map over our data and create a marker for each bar datum.
 		// see https://developers.google.com/maps/documentation/javascript/reference/marker
-		this.barMarkers = this.state.bars.map((bar, index) => {
-			return new window.google.maps.Marker({
-				animation: window.google.maps.Animation.DROP,
-				icon: defaultIcon,
-				id: index,
-				map: this.davisMap,
-				position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
-				title: bar.venue.name,
-				other: bar,
-				visible: true,
+		this.setState({
+			barMarkers: this.state.bars.map((bar, index) => {
+				return new window.google.maps.Marker({
+					animation: window.google.maps.Animation.DROP,
+					icon: defaultIcon,
+					id: index,
+					map: this.state.davisMap,
+					position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
+					title: bar.venue.name,
+					other: bar,
+					visible: true,
+				})
 			})
-		})
+		});
 
 		// Create an info window instance and a function to populate the info window with the approriate information, e.g. the name of the bar and to open the window. Also add a "closeclick" listener to empty the info window and prepare it for the next time it will be used.
 		// see https://developers.google.com/maps/documentation/javascript/reference/info-window
@@ -205,8 +212,8 @@ class App extends Component {
 		}
 
 		// For each bar marker, add a click listener to populate the info window with the appropriate information. Also add mouse event listeners to toggle the icon color
-		this.barMarkers.forEach((marker, index) => {
-			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.davisMap));
+		this.state.barMarkers.forEach((marker, index) => {
+			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.state.davisMap));
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
@@ -228,20 +235,26 @@ class App extends Component {
 	///////////////
 	// A function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
 	showListings = () => {
-		this.bounds = new window.google.maps.LatLngBounds();
-		this.barMarkers.forEach(marker => {
-			marker.setMap(this.davisMap);
-			this.bounds.extend(marker.position);
-			marker.visible = true;
-		});
-		this.davisMap.fitBounds(this.bounds);
+		const bounds = new window.google.maps.LatLngBounds();
+		this.setState({
+			barMarkers: this.state.barMarkers.map(marker => {
+				marker.setMap(this.state.davisMap);
+				bounds.extend(marker.position);
+				marker.visible = true;
+				return marker;
+			}),
+			davisMap: this.state.davisMap.fitBounds(bounds),
+		})
 	}
 
 	// A function to hide our bar markers by setting they map property back to null.
-	hideListings = () => this.barMarkers.forEach(marker => {
-		marker.setMap(null);
-		marker.visible = false;
-	});
+	hideListings = () => this.setState({
+		barMarkers: this.state.barMarkers.map(marker => {
+			marker.setMap(null);
+			marker.visible = false;
+			return marker;
+		}),
+	})
 
 	// A function to show only bar markers within a drawn polygon, hiding all others
 	handlePolygon = (event) => {
@@ -373,6 +386,7 @@ class App extends Component {
 
 	// A function to load our map by calling loadScript with our URL details
 	loadMap = () => {
+		console.log("loadMap fired")
 		const key = "AIzaSyAKidTbGki0g1eG1laz79qvkDVLMYVxLOU";
 		const libraries = ["drawing", "geometry", "geocoder"];
 		const version = "3";
@@ -387,7 +401,7 @@ class App extends Component {
 	////////////////////////////
 	// A function to fetch details for each bar.
     //The plan here was to use the IDs of the bars in my list of bars (which I fetched using the /explore endpoint) to get detailed information about each bar and then filter based on thingsl like price and rating.  Unfortunately, FourSquare's generosity doesn't stretch this far. I kept getting status 429 - too many requests.
-	// loadDetails = () => {
+	loadDetails = () => {
 	// 	const endpoint = "https://api.foursquare.com/v2/venues/";
 	// 	const params = {
 	// 		client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
@@ -407,7 +421,7 @@ class App extends Component {
 	// 			.catch((error) => console.log(error));
 	// 			if(i === this.state.bars.length - 1) this.loadMap();
 	// 	}
-	// }
+	}
 	
 	// A function to fetch our FourSquare data using axios
 	loadData = () => {
