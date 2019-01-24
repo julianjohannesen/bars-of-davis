@@ -40,7 +40,9 @@ class App extends Component {
 		],
 		//barDetails: []
 		barMarkers: [],
+		bounds: {},
 		davisMap: {},
+		polygon: {},
 	}
 
 	// Davis Square lat long
@@ -50,7 +52,7 @@ class App extends Component {
 	/// bounds = {};
 	//barMarkers = [];
 	drawingMngr = {};
-	polygon = null;
+	//polygon = null;
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance.
@@ -63,7 +65,10 @@ class App extends Component {
 			},
 			zoom: 12,
 		}
-		this.setState({davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts)});
+		this.setState({
+			davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts),
+			bounds: new window.google.maps.LatLngBounds(),
+		});
 
 		console.log("What's going on?", this.state.davisMap)
 
@@ -235,19 +240,20 @@ class App extends Component {
 	///////////////
 	// A function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
 	showListings = () => {
-		const bounds = new window.google.maps.LatLngBounds();
 		this.setState({
 			barMarkers: this.state.barMarkers.map(marker => {
 				marker.setMap(this.state.davisMap);
-				bounds.extend(marker.position);
+				this.state.bounds.extend(marker.position);
+				// A flag I added to enable the venue list view functionality
 				marker.visible = true;
 				return marker;
 			}),
-			davisMap: this.state.davisMap.fitBounds(bounds),
 		})
+		// Changing state without notifying react. I tried including this in setState setting the state on davisMap to the result of an anonymous function that fitbounds and then returned the map, but I got some errors I couldn't resolve. 
+		this.state.davisMap.fitBounds(this.state.bounds);
 	}
 
-	// A function to hide our bar markers by setting they map property back to null.
+	// A function to hide our bar markers by setting the map property back to null.
 	hideListings = () => this.setState({
 		barMarkers: this.state.barMarkers.map(marker => {
 			marker.setMap(null);
@@ -260,7 +266,8 @@ class App extends Component {
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			for (let i = 0; i < markers.length; i++) {
-				if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.polygon)) {
+				// containsLocation returns a boolean. 
+				if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon)) {
 					markers[i].setMap(this.davisMap)
 				} else {
 					markers[i].setMap(null);
@@ -268,23 +275,35 @@ class App extends Component {
 			}
 		}
 
-		if (this.polygon) {
-			this.polygon.setMap(null);
+		// I don't get what's happening here. It looks like its saying if there's no polygon then remove the polygon from the map and hide the venues.
+		if (this.state.polygon) {
+			this.setState({
+				// this won't work unless I return a polygon object.
+				polygon: this.state.polygon.setMap(null),
+			})
+			// This has yet another call to setState in it
 			this.hideListings();
 		}
+		// Changing drawingMngr's state without notifying react
 		this.drawingMngr.setDrawingMode(null);
-		this.polygon = event.overlay;
-		this.polygon.setEditable(true);
-		searchWithinPolygon(this.barMarkers);
-		this.polygon.getPath().addListener('set_at', searchWithinPolygon);
-		this.polygon.getPath().addListener('insert_at', searchWithinPolygon);
+		this.setState({
+			polygon: event.overlay,
+		})
+		// Changing polygon's state without notifying react
+		// This isn't going to happen at the right time. Polygon has to be set to event.overlay before it can have its setEditable property set.
+		this.state.polygon.setEditable(true);
+
+		searchWithinPolygon(this.state.barMarkers);
+		
+		this.state.polygon.getPath().addListener('set_at', searchWithinPolygon);
+		this.state.polygon.getPath().addListener('insert_at', searchWithinPolygon);
 	}
 
 	// A function to toggle the drawing controls on the map
 	toggleDrawing = () => {
 		if (this.drawingMngr.map) {
 			this.drawingMngr.setMap(null);
-			if (this.polygon) this.polygon.setMap(null);
+			if (this.state.polygon) this.state.polygon.setMap(null);
 		} else {
 			this.drawingMngr.setMap(this.davisMap);
 			this.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
