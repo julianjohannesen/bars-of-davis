@@ -311,7 +311,7 @@ class App extends Component {
 			this.drawingMngr.setMap(null);
 			if (this.state.polygon) this.state.polygon.setMap(null);
 		} else {
-			this.drawingMngr.setMap(this.davisMap);
+			this.drawingMngr.setMap(this.state.davisMap);
 			this.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
 		}
 	}
