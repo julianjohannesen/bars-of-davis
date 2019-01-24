@@ -48,11 +48,7 @@ class App extends Component {
 	// Davis Square lat long
 	lat = 42.396365;
 	lng = -71.122262;
-	//davisMap = {};
-	/// bounds = {};
-	//barMarkers = [];
 	drawingMngr = {};
-	//polygon = null;
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance.
@@ -65,9 +61,11 @@ class App extends Component {
 			},
 			zoom: 12,
 		}
+		// Create the map and bounds instances
 		this.setState({
 			davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts),
 			bounds: new window.google.maps.LatLngBounds(),
+			barInfo: new window.google.maps.InfoWindow(),
 		});
 
 		console.log("What's going on?", this.state.davisMap)
@@ -168,11 +166,11 @@ class App extends Component {
 			}
 		],
 			{ name: "Night Mode" });
-		// We're adjusting the map state without notifying React. We should be setting state.
+		// We're adjusting the map state without notifying React. We should be setting state. Not sure how yet.
 		this.state.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
 		this.state.davisMap.setMapTypeId('styled_davisMap');
 
-		// Create custom markers icons for our markers.
+		// Create custom marker icons for our markers.
 		const makeMarkerIcon = (markerColor) => {
 			const markerImage = new window.google.maps.MarkerImage(
 				'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
@@ -180,7 +178,8 @@ class App extends Component {
 				new window.google.maps.Size(21, 34),
 				new window.google.maps.Point(0, 0),
 				new window.google.maps.Point(10, 34),
-				new window.google.maps.Size(21, 34));
+				new window.google.maps.Size(21, 34),
+				);
 			return markerImage;
 		}
 		const defaultIcon = makeMarkerIcon('0091ff');
@@ -203,22 +202,27 @@ class App extends Component {
 			})
 		});
 
-		// Create an info window instance and a function to populate the info window with the approriate information, e.g. the name of the bar and to open the window. Also add a "closeclick" listener to empty the info window and prepare it for the next time it will be used.
+		// Create an info window instance and a function to populate the info window with the approriate information, e.g. the name of the bar, and to open the window. Also add a "closeclick" listener to empty the info window and prepare it for the next time it will be used.
 		// see https://developers.google.com/maps/documentation/javascript/reference/info-window
-		const barInfo = new window.google.maps.InfoWindow();
 		const populateBarInfo = (info, marker, map) => {
-			if (info !== marker) {
-				// this will be an item from the barMarkers array
+			const updateInfoWin = () => {
 				info.marker = marker;
 				info.setContent(`<h3>${marker.title}</h3><p>${marker.other.venue.location.address}</p>`);
 				info.open(map, marker);
 				info.addListener("closeclick", () => info.marker = null);
+				return info;
+			}
+			if (info !== marker) {
+				this.setState({
+					barInfo: updateInfoWin(),
+				});
 			}
 		}
 
 		// For each bar marker, add a click listener to populate the info window with the appropriate information. Also add mouse event listeners to toggle the icon color
 		this.state.barMarkers.forEach((marker, index) => {
-			marker.addListener("click", () => populateBarInfo(barInfo, marker, this.state.davisMap));
+			marker.addListener("click", () => populateBarInfo(this.state.barInfo, marker, this.state.davisMap));
+			
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
