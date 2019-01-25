@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
-import Bar from './Bar.js';
 
 export default class BarList extends Component {
-
-    renderBars = () => {
-        console.log("renderBars is getting called. this is the marker: ", this.props.barMarkers)
-        this.props.barMarkers.map( (marker) => marker.visible ? <Bar key={uuid()} barMarker={marker}  /> : null)
-    }
-
     render() {
-        
+
+        const itemStyle = {
+            padding: "0.5em",
+            border: "1px solid #242f3e",
+            borderBottom: "none",
+        }
+
         return (
-            <section id="barList" className="section column is-narrow" style={{padding:"0",}}>
+            <section id="barList" className="section column is-narrow" style={{ padding: "0", }}>
                 <ul className="menu-list">
-                    {/*this.renderBars()*/}
+                    {this.props.barMarkers.map((marker)=> (
+                        <li className="menu-item" key={uuid()} style={itemStyle}>
+                            <h3>{marker.barData.venue.name}</h3>
+                        </li>
+                    ))}
+
                 </ul>
             </section>
         )

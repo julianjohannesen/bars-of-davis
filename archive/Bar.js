@@ -13,7 +13,8 @@ export default class Bar extends Component {
 
         return (
             <li className="menu-item" style={itemStyle}>
-                <h3>{barMarker.bar.venue.name}</h3>
+                <h3>{/*barMarker.barData.venue.name*/}</h3>
+                <p>blah</p>
             </li>
         )
     }

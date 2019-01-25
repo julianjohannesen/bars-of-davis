@@ -204,7 +204,7 @@ class App extends Component {
 					map: this.state.davisMap,
 					position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
 					title: bar.venue.name,
-					other: bar,
+					barData: bar,
 					visible: true,
 				})
 			})
@@ -280,7 +280,7 @@ class App extends Component {
 	toggleDrawing will eventually add a listener to the drawing manager to call handlePolygon on the overlaycomplete event.
 	*/
 
-	// PROBLEMS: Editing the polygon and/or toggling off the tools does not adjust which markers are showing. When I edit the polgyon, it should show markers within the new boundries.
+	// PROBLEMS: Editing the polygon and/or toggling off the tools does not adjust which markers are showing. When I edit the polgyon, it should show markers within the new boundries. Part of this may be repaired by fixing state issues for drawingMngr.
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			this.setState({
@@ -497,7 +497,7 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/" render={() => <Mapx 
 							// barDetails={this.state.barDetails}
-							barMarkers={this.barMarkers}
+							barMarkers={this.state.barMarkers}
 							showListings = {this.showListings}
 							hideListings = {this.hideListings}
 							toggleDrawing = {this.toggleDrawing}
