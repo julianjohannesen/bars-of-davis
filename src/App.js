@@ -48,7 +48,6 @@ class App extends Component {
 	// Davis Square lat long
 	lat = 42.396365;
 	lng = -71.122262;
-	drawingMngr = {};
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance.
@@ -66,9 +65,18 @@ class App extends Component {
 			davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts),
 			bounds: new window.google.maps.LatLngBounds(),
 			barInfo: new window.google.maps.InfoWindow(),
+			drawingMngr: new window.google.maps.drawing.DrawingManager({
+				drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
+				drawingControl: true,
+				drawingControlOptions: {
+					position: window.google.maps.ControlPosition.TOP_LEFT,
+					drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
+				},
+			}),
 		});
 
-		console.log("What's going on?", this.state.davisMap)
+		console.log("What's going on with the map object?", this.state.davisMap)
+		console.log("What's going on with the polygon object?", this.state.polygon)
 
 		// Create a custom style instance and set our map type and map type ID.
 		const davisMapStyle = new window.google.maps.StyledMapType([
@@ -227,17 +235,6 @@ class App extends Component {
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
-
-		// Create a drawing manager instance to allow users to draw a polygon within which they can search
-		this.drawingMngr = new window.google.maps.drawing.DrawingManager({
-			drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
-			drawingControl: true,
-			drawingControlOptions: {
-				position: window.google.maps.ControlPosition.TOP_LEFT,
-				drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
-			},
-		});
-
 	}
 
 	///////////////
@@ -267,31 +264,51 @@ class App extends Component {
 		}),
 	})
 
-	// A function to show only bar markers within a drawn polygon, hiding all others
-	// Changing state without notifying react
+	/* 
+	handlePolygon shows only markers that are within a polgyon.
+	
+	First, if there is already a polgyon on the map, handlePolgyon removes it and all of the map markers from the map. It then sets the drawing mode to null. This will set the cursor to non-drawing mode.
+	
+	We then overwrite the polygon with event.overlay.
+
+	Next, we call searchWithinPolygon, passing in the barMarkers array. This will add back to the map just the markers that are within the polygon.
+
+	searchWithinPolygon takes an array of markers and loops through those markers performing a check (with containsLocation) on each marker to see if it is within the polygon. If the answer is yes, then that marker is added to the map. If the answer is no, then that marker is removed from the map. This involves changing the markers state.
+
+	Finally, we also need to add listeners for the events that fire when the polygon is edited and call searchWithinPolgyon when that happens. The listeners are set on the array of LatLng objects that define any polygon, which we can get with getPath(). When the polygon is edited, i.e., when there's a change to the array of LatLng objects that define the polgyon, the set_at and insert_at events are fired. When those events fire, that's when we want to searchWithinPolgyon.
+
+	toggleDrawing will eventually add a listener to the drawing manager to call handlePolygon on the overlaycomplete event.
+	*/
+
 	handlePolygon = (event) => {
-		const searchWithinPolygon = (markers) => {
-			for (let i = 0; i < markers.length; i++) {
-				// containsLocation returns a boolean. 
-				if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon)) {
-					markers[i].setMap(this.state.davisMap)
-				} else {
-					markers[i].setMap(null);
+		const searchWithinPolygon = this.setState({
+			barMarkers: (markers) => {
+				for (let i = 0; i < markers.length; i++) {
+					if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon)) {
+						markers[i].setMap(this.state.davisMap)
+					} else {
+						markers[i].setMap(null);
+					}
 				}
-			}
-		}
+				return markers;
+			},
+		});
 
 		// I don't get what's happening here. It looks like its saying if there's no polygon then remove the polygon from the map and hide the venues.
 		if (this.state.polygon) {
 			this.setState({
 				// this won't work unless I return a polygon object.
-				polygon: this.state.polygon.setMap(null),
+				polygon: (()=>{
+					console.log("The polygon: ", this.state.polygon)
+					this.state.polygon.setMap(null);
+					return this.state.polygon;
+				})(),
 			})
 			// This has yet another call to setState in it
 			this.hideListings();
 		}
 		// Changing drawingMngr's state without notifying react
-		this.drawingMngr.setDrawingMode(null);
+		this.state.drawingMngr.setDrawingMode(null);
 		this.setState({
 			polygon: event.overlay,
 		})
@@ -307,12 +324,13 @@ class App extends Component {
 
 	// A function to toggle the drawing controls on the map
 	toggleDrawing = () => {
-		if (this.drawingMngr.map) {
-			this.drawingMngr.setMap(null);
+		console.log("Here's the drawing manager object: ", this.state.drawingMngr)
+		if (this.state.drawingMngr.map) {
+			this.state.drawingMngr.setMap(null);
 			if (this.state.polygon) this.state.polygon.setMap(null);
 		} else {
-			this.drawingMngr.setMap(this.state.davisMap);
-			this.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
+			this.state.drawingMngr.setMap(this.state.davisMap);
+			this.state.drawingMngr.addListener('overlaycomplete', this.handlePolygon);
 		}
 	}
 
