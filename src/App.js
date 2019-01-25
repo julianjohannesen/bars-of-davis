@@ -42,7 +42,7 @@ class App extends Component {
 		barMarkers: [],
 		bounds: {},
 		davisMap: {},
-		polygon: {},
+		polygon: [],
 	}
 
 	// Davis Square lat long
@@ -281,40 +281,40 @@ class App extends Component {
 	*/
 
 	handlePolygon = (event) => {
-		const searchWithinPolygon = this.setState({
-			barMarkers: (markers) => {
-				for (let i = 0; i < markers.length; i++) {
-					if (window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon)) {
-						markers[i].setMap(this.state.davisMap)
-					} else {
-						markers[i].setMap(null);
+		const searchWithinPolygon = (markers) => {
+			this.setState({
+				barMarkers: ( () => {
+					for (let i = 0; i < markers.length; i++) {
+						const cL = window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon);
+						if (cL) {
+							markers[i].setMap(this.state.davisMap)
+						} else {
+							markers[i].setMap(null);
+						}
 					}
-				}
-				return markers;
-			},
-		});
-
-		// I don't get what's happening here. It looks like its saying if there's no polygon then remove the polygon from the map and hide the venues.
-		if (this.state.polygon) {
+					return markers;
+				})(),	
+			});
+		}
+	
+		if (this.state.polygon.length > 0) {
 			this.setState({
 				// this won't work unless I return a polygon object.
 				polygon: (()=>{
-					console.log("The polygon: ", this.state.polygon)
 					this.state.polygon.setMap(null);
 					return this.state.polygon;
 				})(),
 			})
-			// This has yet another call to setState in it
 			this.hideListings();
 		}
 		// Changing drawingMngr's state without notifying react
 		this.state.drawingMngr.setDrawingMode(null);
 		this.setState({
-			polygon: event.overlay,
+			polygon: (()=>{
+				event.overlay.setEditable(true);
+				return event.overlay;
+			})(),	
 		})
-		// Changing polygon's state without notifying react
-		// This isn't going to happen at the right time. Polygon has to be set to event.overlay before it can have its setEditable property set.
-		this.state.polygon.setEditable(true);
 
 		searchWithinPolygon(this.state.barMarkers);
 		
