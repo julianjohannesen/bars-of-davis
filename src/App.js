@@ -280,6 +280,7 @@ class App extends Component {
 	toggleDrawing will eventually add a listener to the drawing manager to call handlePolygon on the overlaycomplete event.
 	*/
 
+	// PROBLEMS: Editing the polygon and/or toggling off the tools does not adjust which markers are showing. When I edit the polgyon, it should show markers within the new boundries.
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			this.setState({
