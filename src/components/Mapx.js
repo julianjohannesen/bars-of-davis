@@ -7,6 +7,11 @@ export default class Mapx extends Component {
 		// removed barDetails
 		const {barMarkers, showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
 
+		const mapContainerStyle = {
+			height: "80vh",
+			paddingTop: "0",
+		}
+
 		return (
 			<main>
 				<section id="options-box">
@@ -78,12 +83,13 @@ export default class Mapx extends Component {
 					</div>
 				</section>
 				
-				<section className="section columns" style={{paddingTop:"0"}}>
+				<section className="section columns" style={mapContainerStyle}>
 					<BarList 
 						// barDetails={barDetails}
 						barMarkers={barMarkers} 
+						listClick={this.props.listClick}
 					/>
-					<section className="column" id="map" style={{ height: "80vh" }}>
+					<section className="column" id="map">
 					</section>
 				</section>
 			</main>

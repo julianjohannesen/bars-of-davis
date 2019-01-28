@@ -75,9 +75,6 @@ class App extends Component {
 			}),
 		});
 
-		console.log("What's going on with the map object?", this.state.davisMap)
-		console.log("What's going on with the polygon object?", this.state.polygon)
-
 		// Create a custom style instance and set our map type and map type ID.
 		const davisMapStyle = new window.google.maps.StyledMapType([
 			{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
@@ -210,31 +207,31 @@ class App extends Component {
 			})
 		});
 
-		// Create an info window instance and a function to populate the info window with the approriate information, e.g. the name of the bar, and to open the window. Also add a "closeclick" listener to empty the info window and prepare it for the next time it will be used.
-		// see https://developers.google.com/maps/documentation/javascript/reference/info-window
-		const populateBarInfo = (info, marker, map) => {
-			const updateInfoWin = () => {
-				info.marker = marker;
-				info.setContent(`<h3>${marker.title}</h3><p>${marker.other.venue.location.address}</p>`);
-				info.open(map, marker);
-				info.addListener("closeclick", () => info.marker = null);
-				return info;
-			}
-			if (info !== marker) {
-				this.setState({
-					barInfo: updateInfoWin(),
-				});
-			}
-		}
-
 		// For each bar marker, add a click listener to populate the info window with the appropriate information. Also add mouse event listeners to toggle the icon color
 		// Changing state here by adding listeners, but using the Google Maps API's addListener to add map listeners. How do you notify react of this change?
 		this.state.barMarkers.forEach((marker, index) => {
-			marker.addListener("click", () => populateBarInfo(this.state.barInfo, marker, this.state.davisMap));
+			marker.addListener("click", () => this.populateBarInfo(this.state.barInfo, marker, this.state.davisMap));
 			
 			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
 			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
+	}
+
+	// Create an info window instance and a function to populate the info window with the approriate information, e.g. the name of the bar, and to open the window. Also add a "closeclick" listener to empty the info window and prepare it for the next time it will be used.
+	// see https://developers.google.com/maps/documentation/javascript/reference/info-window
+	populateBarInfo = (info, marker, map) => {
+		const updateInfoWin = () => {
+			info.marker = marker;
+			info.setContent(`<h3>${marker.title}</h3><p>${marker.barData.venue.location.address}</p>`);
+			info.open(map, marker);
+			info.addListener("closeclick", () => info.marker = null);
+			return info;
+		}
+		if (info !== marker) {
+			this.setState({
+				barInfo: updateInfoWin(),
+			});
+		}
 	}
 
 	///////////////
@@ -280,7 +277,11 @@ class App extends Component {
 	toggleDrawing will eventually add a listener to the drawing manager to call handlePolygon on the overlaycomplete event.
 	*/
 
-	// PROBLEMS: Editing the polygon and/or toggling off the tools does not adjust which markers are showing. When I edit the polgyon, it should show markers within the new boundries. Part of this may be repaired by fixing state issues for drawingMngr.
+	// PROBLEMS: 
+	// 1. Editing the polygon never worked but it used to allow you to edit the polygon and just wouldn't show new markers, whereas now it throws an error that this.props.barMakers.map is not a function
+	// 2. Toggling off the tools does not adjust which markers are showing.
+	// 3. Old polygon's stick around
+	// When I edit the polgyon, it should show markers within the new boundries. Part of this may be repaired by fixing state issues for drawingMngr.
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			this.setState({
@@ -288,9 +289,11 @@ class App extends Component {
 					for (let i = 0; i < markers.length; i++) {
 						const cL = window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon);
 						if (cL) {
-							markers[i].setMap(this.state.davisMap)
+							markers[i].setMap(this.state.davisMap);
+							markers[i].visible = true;
 						} else {
 							markers[i].setMap(null);
+							markers[i].visible = false;
 						}
 					}
 					return markers;
@@ -300,7 +303,6 @@ class App extends Component {
 	
 		if (this.state.polygon.length > 0) {
 			this.setState({
-				// this won't work unless I return a polygon object.
 				polygon: (()=>{
 					this.state.polygon.setMap(null);
 					return this.state.polygon;
@@ -415,6 +417,15 @@ class App extends Component {
 		}
 	}
 
+	listClick = (event) => {
+		this.state.barMarkers.forEach( (marker) => {
+			if(marker.barData.venue.id === event.target.id){
+				this.populateBarInfo(this.state.barInfo, marker, this.state.davisMap)
+			}
+		});
+	}
+	
+
 	////////////////////////////////////////////////
 	// INSERT SCRIPT TAG AND LOAD GOOGLE MAPS API //
 	////////////////////////////////////////////////
@@ -503,6 +514,7 @@ class App extends Component {
 							toggleDrawing = {this.toggleDrawing}
 							zoomToArea = {this.zoomToArea} 
 							searchWithinTime = {this.searchWithinTime}
+							listClick={this.listClick}
 						/>} />
 						<Route exact path="/About" component={About} />
 						<Route render={props => <NoMatch {...props} theLocation={this.props.location} />} />
