@@ -6756,10 +6756,18 @@ label.panel-block {
   .form-container .text-margin {
     margin: calc(0.375em - 1px) 0.6em; }
 
-.menu-item:hover {
-  background-color: #242f43;
-  color: #ffffff;
-  cursor: pointer; }
-
-.menu-item:last-child {
-  border-bottom: 1px; }
+#barListUl {
+  overflow-y: scroll;
+  height: calc(100% - 3rem);
+  width: 28vw; }
+  #barListUl .menu-item {
+    padding: 0.5em;
+    border: 1px solid #242f3e;
+    border-bottom: none;
+    border-right: none; }
+  #barListUl .menu-item:hover {
+    background-color: #242f43;
+    color: #ffffff;
+    cursor: pointer; }
+  #barListUl .menu-item:last-child {
+    border-bottom: 1px solid #242f3e; }

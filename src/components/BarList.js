@@ -20,10 +20,10 @@ export default class BarList extends Component {
         return (
             <section id="barList" className="section column is-narrow" style={{ padding: "0", }}>
                 <h2 className="heading is-size-4">Local Bars</h2>
-                <ul className="menu-list" id="barList" onClick={this.props.listClick} style={ulStyle}>
+                <ul className="menu-list" id="barListUl" onClick={this.props.listClick} >
                     {this.props.barMarkers.map((marker) => {
                         return marker.visible ? (
-                            <li className="menu-item" key={uuid()} style={itemStyle}>
+                            <li className="menu-item" key={uuid()} >
                                 <h3 id={marker.barData.venue.id}>{marker.barData.venue.name}</h3>
                             </li>
                         ) : null;

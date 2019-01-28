@@ -15,17 +15,27 @@
     }
 }
 
-.menu-item:hover {
-    background-color: rgb(36, 47, 67);
-    color: #ffffff;
-    cursor: pointer;
-}
+#barListUl {
+    overflow-y: scroll;
+    height: calc(100% - 3rem);
+    width: 28vw;
 
-.menu-item:last-child {
-    border-bottom: 1px;
-}
 
-// navbar a.navbar-item:hover {
-//     background-color: #ffffff;
-//     color: rgb(36,47,67);
-// }
+    .menu-item {
+        padding: 0.5em;
+        border: 1px solid #242f3e;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    .menu-item:hover {
+        background-color: rgb(36, 47, 67);
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .menu-item:last-child {
+        border-bottom: 1px solid #242f3e;
+    }
+
+}
