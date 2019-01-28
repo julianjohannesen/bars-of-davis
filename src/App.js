@@ -491,11 +491,11 @@ class App extends Component {
 
 	render() {
 		return (
-			<Router>
+			<Router basename="bars-of-davis">
 				<div className="App">
 					<Navbar />
 					<Switch>
-						<Route exact path="/bars-of-davis/" render={() => <Mapx 
+						<Route exact path="/" render={() => <Mapx 
 							// barDetails={this.state.barDetails}
 							barMarkers={this.state.barMarkers}
 							showListings = {this.showListings}
@@ -504,7 +504,7 @@ class App extends Component {
 							zoomToArea = {this.zoomToArea} 
 							searchWithinTime = {this.searchWithinTime}
 						/>} />
-						<Route exact path="/bars-of-davis/About" component={About} />
+						<Route exact path="/About" component={About} />
 						<Route render={props => <NoMatch {...props} theLocation={this.props.location} />} />
 					</Switch>
 					<Footerx />
