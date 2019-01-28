@@ -8,19 +8,19 @@ self.__precacheManifest = [
     "url": "/bars-of-davis/static/js/runtime~main.76bc196b.js"
   },
   {
-    "revision": "bc53532f5ce0ddd963e9",
-    "url": "/bars-of-davis/static/js/main.bc53532f.chunk.js"
+    "revision": "839f49b7cf531f301357",
+    "url": "/bars-of-davis/static/js/main.839f49b7.chunk.js"
   },
   {
     "revision": "54c34e510d59d14a2193",
     "url": "/bars-of-davis/static/js/1.54c34e51.chunk.js"
   },
   {
-    "revision": "bc53532f5ce0ddd963e9",
-    "url": "/bars-of-davis/static/css/main.eea34778.chunk.css"
+    "revision": "839f49b7cf531f301357",
+    "url": "/bars-of-davis/static/css/main.3b44f5f0.chunk.css"
   },
   {
-    "revision": "120e9257bcee06cb4edd1a0aecebef33",
+    "revision": "68d2049e4803eec493f044eee6609275",
     "url": "/bars-of-davis/index.html"
   }
 ];
