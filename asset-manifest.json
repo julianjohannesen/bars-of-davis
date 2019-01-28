@@ -1,7 +1,7 @@
 {
   "main.css": "/bars-of-davis/static/css/main.eea34778.chunk.css",
-  "main.js": "/bars-of-davis/static/js/main.4cdd9aa1.chunk.js",
-  "main.js.map": "/bars-of-davis/static/js/main.4cdd9aa1.chunk.js.map",
+  "main.js": "/bars-of-davis/static/js/main.bc53532f.chunk.js",
+  "main.js.map": "/bars-of-davis/static/js/main.bc53532f.chunk.js.map",
   "static/js/1.54c34e51.chunk.js": "/bars-of-davis/static/js/1.54c34e51.chunk.js",
   "static/js/1.54c34e51.chunk.js.map": "/bars-of-davis/static/js/1.54c34e51.chunk.js.map",
   "runtime~main.js": "/bars-of-davis/static/js/runtime~main.76bc196b.js",
@@ -9,6 +9,6 @@
   "static/media/oms-960x340.jpg": "/bars-of-davis/static/media/oms-960x340.e7283396.jpg",
   "static/css/main.eea34778.chunk.css.map": "/bars-of-davis/static/css/main.eea34778.chunk.css.map",
   "index.html": "/bars-of-davis/index.html",
-  "precache-manifest.1d0f23668cb4178036d38358b4958f4f.js": "/bars-of-davis/precache-manifest.1d0f23668cb4178036d38358b4958f4f.js",
+  "precache-manifest.61ec27fb5ff913b0f8c5d43529021e60.js": "/bars-of-davis/precache-manifest.61ec27fb5ff913b0f8c5d43529021e60.js",
   "service-worker.js": "/bars-of-davis/service-worker.js"
 }

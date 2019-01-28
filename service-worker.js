@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/bars-of-davis/precache-manifest.1d0f23668cb4178036d38358b4958f4f.js"
+  "/bars-of-davis/precache-manifest.61ec27fb5ff913b0f8c5d43529021e60.js"
 );
 
 workbox.clientsClaim();
