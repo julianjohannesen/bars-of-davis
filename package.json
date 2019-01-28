@@ -2,7 +2,7 @@
   "name": "TBoDS",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://julianjohannesen.github.io/neighborhood_map/",
+  "homepage": "http://julianjohannesen.github.io/bars-of-davis/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
     "@fortawesome/free-solid-svg-icons": "^5.6.3",
