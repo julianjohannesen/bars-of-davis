@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import 'assets/css/bulma.min.css';
+//import 'assets/css/bulma.min.css';
 import 'assets/css/App.css';
 import axios from 'axios';
 import Navbar from './components/layout/Navbar.js';
@@ -8,7 +8,6 @@ import Footerx from './components/layout/Footerx.js';
 import Mapx from './components/Mapx.js';
 import About from './pages/About';
 import NoMatch from './pages/NoMatch';
-import { timingSafeEqual } from 'crypto';
 
 class App extends Component { 
 

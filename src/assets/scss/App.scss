@@ -1,3 +1,7 @@
+@charset "utf-8";
+@import "_variables.sass";
+@import "../../../node_modules/bulma/bulma.sass";
+
 .form-container {
     display: flex;
     flex-flow: row wrap;
@@ -10,3 +14,18 @@
         margin: calc(0.375em - 1px) .6em;
     }
 }
+
+.menu-item:hover {
+    background-color: rgb(36, 47, 67);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.menu-item:last-child {
+    border-bottom: 1px;
+}
+
+// navbar a.navbar-item:hover {
+//     background-color: #ffffff;
+//     color: rgb(36,47,67);
+// }
