@@ -4,33 +4,18 @@ import { Link } from 'react-router-dom';
 export default class Navbar extends Component {
 
 	state = {
-		burgerOpen: false,
+		burgerActive: false,
 	}
 
-	// componentDidMount() {
-	// 	// A vanilla JS function to toggle hamburger etc.
-	// 	// Get all "navbar-burger" elements
-	// 	const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-	// 	// Check if there are any navbar burgers
-	// 	if ($navbarBurgers.length > 0) {
-
-	// 		// Add a click event on each of them
-	// 		$navbarBurgers.forEach(el => {
-	// 			el.addEventListener('click', () => {
-
-	// 				// Get the target from the "data-target" attribute
-	// 				const target = el.dataset.target;
-	// 				const $target = document.getElementById(target);
-
-	// 				// Toggle the "is-active" className on both the "navbar-burger" and the "navbar-menu"
-	// 				el.classNameList.toggle('is-active');
-	// 				$target.classNameList.toggle('is-active');
-
-	// 			});
-	// 		});
-	// 	}
-	// }
+	toggleBurger = (event) => {
+		// This seems roundabout, but it allows you to target multiple burger menus at the same time without knowing the specific id. The target here is the id targeted by the data-target attribute on the burger element
+		const target = event.target.dataset.target;
+		// And this is the element with that id
+		const $target = document.getElementById(target);
+		// Now set state on the burgerActive flag to be opposite whatever it currently is (that's the toggle part)
+		this.setState({burgerActive: !this.state.burgerActive,});
+		// We toggle the classes in the attributes 
+	}
 
 	render() {
 		return (
@@ -40,10 +25,12 @@ export default class Navbar extends Component {
 					<a className="navbar-item is-size-1" href="/">
 						The Bars of Davis Square
 					</a>
-					{/* Should I add the burger class? What is the burger class doing here? */}
+
 					<div 
-						className="navbar-burger" 
-						data-target="navbarExampleTransparentExample" 
+						className= {burgerActive ? "navbar-burger is-active" : "navbar-burger"} 
+						data-target="navbarMenu" 
+						id="burgerButton"
+						onClick={this.toggleBurger}
 						role="button" 
 						style={{outline: "none"}}
 						tabIndex="0"
@@ -54,7 +41,7 @@ export default class Navbar extends Component {
 					</div>
 				</div>
 
-				<div id="navbarExampleTransparentExample" className="navbar-menu">
+				<div id="navbarMenu" className= {burgerActive ? "navbar-menu is-active" : "navbar-menu">
 					<div className="navbar-start">
 					</div>
 					<div className="navbar-end">
