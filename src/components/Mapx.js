@@ -7,14 +7,9 @@ export default class Mapx extends Component {
 		// removed barDetails
 		const {barMarkers, showListings, hideListings, toggleDrawing, zoomToArea, searchWithinTime} = this.props;
 
-		const mapContainerStyle = {
-			height: "80vh",
-			paddingTop: "0",
-		}
-
 		return (
-			<main>
-				<section id="options-box">
+			<main id="main">
+				<section id="tools">
 					<div className="form-container">
 						<div className="field has-addons" style={{ marginRight: "1em" }}>
 							<div className="control">
@@ -83,15 +78,14 @@ export default class Mapx extends Component {
 					</div>
 				</section>
 				
-				<section className="section columns" style={mapContainerStyle}>
-					<BarList 
-						// barDetails={barDetails}
-						barMarkers={barMarkers} 
-						listClick={this.props.listClick}
-					/>
-					<section className="column" id="map">
-					</section>
+				<BarList 
+					// barDetails={barDetails}
+					barMarkers={barMarkers} 
+					listClick={this.props.listClick}
+				/>
+				<section className="" id="map">
 				</section>
+				
 			</main>
 		)
 	}

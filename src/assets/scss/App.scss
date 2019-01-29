@@ -2,6 +2,31 @@
 @import "_variables.sass";
 @import "../../../node_modules/bulma/bulma.sass";
 
+/********/
+/* GRID */
+/********/
+div.App {
+    display: grid;
+}
+
+    main {
+        display: grid;
+        grid-template-rows: auto 90%;
+        grid-template-columns: 1fr 3fr;
+    }
+
+        #tools {
+            grid-column: 1/-1;
+        }
+
+        #list {
+            grid-column: 1/2;
+        }
+
+        #map {
+            grid-column: 2/-1
+        }
+
 .form-container {
     display: flex;
     flex-flow: row wrap;
@@ -15,10 +40,18 @@
     }
 }
 
+#list {
+    height: auto;
+}
+
+#map {
+    height: auto;
+}
+
 #barListUl {
     overflow-y: scroll;
-    height: calc(100% - 3rem);
-    width: 28vw;
+    // height: calc(100% - 3rem);
+    // width: 28vw;
 
 
     .menu-item {

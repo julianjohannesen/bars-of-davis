@@ -6746,6 +6746,26 @@ label.panel-block {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
 
+/********/
+/* GRID */
+/********/
+div.App {
+  display: grid; }
+
+main {
+  display: grid;
+  grid-template-rows: auto 90%;
+  grid-template-columns: 1fr 3fr; }
+
+#tools {
+  grid-column: 1/-1; }
+
+#list {
+  grid-column: 1/2; }
+
+#map {
+  grid-column: 2/-1; }
+
 .form-container {
   display: flex;
   flex-flow: row wrap;
@@ -6756,10 +6776,14 @@ label.panel-block {
   .form-container .text-margin {
     margin: calc(0.375em - 1px) 0.6em; }
 
+#list {
+  height: auto; }
+
+#map {
+  height: auto; }
+
 #barListUl {
-  overflow-y: scroll;
-  height: calc(100% - 3rem);
-  width: 28vw; }
+  overflow-y: scroll; }
   #barListUl .menu-item {
     padding: 0.5em;
     border: 1px solid #242f3e;
