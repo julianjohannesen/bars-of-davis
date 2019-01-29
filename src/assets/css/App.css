@@ -6754,7 +6754,7 @@ div.App {
 
 main {
   display: grid;
-  grid-template-rows: auto 90%;
+  grid-template-rows: auto auto;
   grid-template-columns: 1fr 3fr; }
 
 #tools {
@@ -6766,32 +6766,33 @@ main {
 #map {
   grid-column: 2/-1; }
 
-.form-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex: 0 1 auto;
+main {
+  height: 700px;
   padding: 1em; }
-  .form-container .text-margin {
-    margin: calc(0.375em - 1px) 0.6em; }
-
-#list {
-  height: auto; }
-
-#map {
-  height: auto; }
-
-#barListUl {
-  overflow-y: scroll; }
-  #barListUl .menu-item {
-    padding: 0.5em;
-    border: 1px solid #242f3e;
-    border-bottom: none;
-    border-right: none; }
-  #barListUl .menu-item:hover {
-    background-color: #242f43;
-    color: #ffffff;
-    cursor: pointer; }
-  #barListUl .menu-item:last-child {
-    border-bottom: 1px solid #242f3e; }
+  main .form-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex: 0 1 auto;
+    padding-bottom: 1em; }
+    main .form-container .text-margin {
+      margin: calc(0.375em - 1px) 0.6em; }
+  main #list {
+    height: 50%; }
+    main #list #listUl {
+      overflow-y: scroll;
+      height: calc(100% - 3rem); }
+      main #list #listUl .menu-item {
+        padding: 0.5em;
+        border: 1px solid #242f3e;
+        border-bottom: none;
+        border-right: none; }
+      main #list #listUl .menu-item:hover {
+        background-color: #242f43;
+        color: #ffffff;
+        cursor: pointer; }
+      main #list #listUl .menu-item:last-child {
+        border-bottom: 1px solid #242f3e; }
+  main #map {
+    height: 50%; }
