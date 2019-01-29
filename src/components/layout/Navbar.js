@@ -63,7 +63,7 @@ export default class Navbar extends Component {
 						<div className="navbar-item">
 							<div className="field">
 								<div className="control">
-									<input className="input" type="text" placeholder="find a bar" />
+									<input className="input" onChange={this.props.handleSearch} type="text" placeholder="find a bar" />
 								</div>
 							</div>
 						</div>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-//import 'assets/css/bulma.min.css';
 import 'assets/css/App.css';
 import axios from 'axios';
 import Navbar from './components/layout/Navbar.js';
@@ -9,7 +8,7 @@ import Mapx from './components/Mapx.js';
 import About from './pages/About';
 import NoMatch from './pages/NoMatch';
 
-class App extends Component { 
+class App extends Component {
 
 	state = {
 		bars: [
@@ -42,6 +41,7 @@ class App extends Component {
 		bounds: {},
 		davisMap: {},
 		polygon: [],
+		searchResult: [],
 	}
 
 	// Davis Square lat long
@@ -50,12 +50,12 @@ class App extends Component {
 
 	initMap = () => {
 		// Initialize our map by creating a new map instance.
-		
+
 		// mapOpts contains our map configuration
 		const mapOpts = {
-			center: { "lat": this.lat, "lng": this.lng  },
-			mapTypeControlOptions: { 
-				mapTypeIds: ['styled_davisMap', 'roadmap',] 
+			center: { "lat": this.lat, "lng": this.lng },
+			mapTypeControlOptions: {
+				mapTypeIds: ['styled_davisMap', 'roadmap',]
 			},
 			zoom: 12,
 		}
@@ -174,34 +174,36 @@ class App extends Component {
 		this.state.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
 		this.state.davisMap.setMapTypeId('styled_davisMap');
 
-		// Create custom marker icons for our markers.
-		const makeMarkerIcon = (markerColor) => {
-			const markerImage = new window.google.maps.MarkerImage(
-				'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
-				'|40|_|%E2%80%A2',
-				new window.google.maps.Size(21, 34),
-				new window.google.maps.Point(0, 0),
-				new window.google.maps.Point(10, 34),
-				new window.google.maps.Size(21, 34),
-				);
-			return markerImage;
-		}
-		const defaultIcon = makeMarkerIcon('0091ff');
-		const highlightedIcon = makeMarkerIcon('FFFF24');
+		// Need to find a way to create color for default and highlighted marker icons
 
 		// Map over our data and create a marker for each bar datum.
 		// see https://developers.google.com/maps/documentation/javascript/reference/marker
 		this.setState({
 			barMarkers: this.state.bars.map((bar, index) => {
+
+				const image = {
+					url: 'http://maps.google.com/mapfiles/ms/micons/bar.png',
+					size: new window.google.maps.Size(32, 32),
+					origin: new window.google.maps.Point(0, 0),
+					anchor: new window.google.maps.Point(16, 32),
+					//scaledSize: new window.google.maps.Size(16, 16)
+				};
+				const shape = {
+					coords: [1, 1, 1, 32, 16, 32, 16, 1],
+					type: 'poly'
+				};
+
 				return new window.google.maps.Marker({
 					animation: window.google.maps.Animation.DROP,
-					icon: defaultIcon,
+					barData: bar,
+					icon: image,
 					id: index,
 					map: this.state.davisMap,
 					position: { lat: bar.venue.location.lat, lng: bar.venue.location.lng },
+					shape: shape,
 					title: bar.venue.name,
-					barData: bar,
 					visible: true,
+					zIndex: 10 + index,
 				})
 			})
 		});
@@ -210,9 +212,9 @@ class App extends Component {
 		// Changing state here by adding listeners, but using the Google Maps API's addListener to add map listeners. How do you notify react of this change?
 		this.state.barMarkers.forEach((marker, index) => {
 			marker.addListener("click", () => this.populateBarInfo(this.state.barInfo, marker, this.state.davisMap));
-			
-			marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
-			marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
+
+			//marker.addListener('mouseover', () => marker.setIcon(highlightedIcon));
+			//marker.addListener('mouseout', () => marker.setIcon(defaultIcon));
 		});
 	}
 
@@ -226,6 +228,13 @@ class App extends Component {
 			info.addListener("closeclick", () => info.marker = null);
 			return info;
 		}
+		const toggleBounce = () => {
+			if (marker.getAnimation() !== null) {
+				marker.setAnimation(null);
+			} else {
+				marker.setAnimation(window.google.maps.Animation.BOUNCE);
+			}
+		}
 		if (info !== marker) {
 			this.setState({
 				barInfo: updateInfoWin(),
@@ -236,6 +245,18 @@ class App extends Component {
 	///////////////
 	// MAP Tools //
 	///////////////
+
+	handleSearch = (event) => {
+		this.setState({
+			searchResult: this.state.barMakers.map((marker) => {
+				if (event.target.value === marker.barData.name) {
+					return marker;
+				}
+				return "No match found.";
+			}),
+		});
+	}
+
 	// A function to show our bar markers on the click of a button. We can do this by setting the map property of each marker and extending the bounds of our map to ensure that our map encompasses all of our markers.
 	showListings = () => {
 		this.setState({
@@ -284,7 +305,7 @@ class App extends Component {
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			this.setState({
-				barMarkers: ( () => {
+				barMarkers: (() => {
 					for (let i = 0; i < markers.length; i++) {
 						const cL = window.google.maps.geometry.poly.containsLocation(markers[i].position, this.state.polygon);
 						if (cL) {
@@ -296,13 +317,13 @@ class App extends Component {
 						}
 					}
 					return markers;
-				})(),	
+				})(),
 			});
 		}
-	
+
 		if (this.state.polygon.length > 0) {
 			this.setState({
-				polygon: (()=>{
+				polygon: (() => {
 					this.state.polygon.setMap(null);
 					return this.state.polygon;
 				})(),
@@ -312,14 +333,14 @@ class App extends Component {
 		// Changing drawingMngr's state without notifying react
 		this.state.drawingMngr.setDrawingMode(null);
 		this.setState({
-			polygon: (()=>{
+			polygon: (() => {
 				event.overlay.setEditable(true);
 				return event.overlay;
-			})(),	
+			})(),
 		})
 
 		searchWithinPolygon(this.state.barMarkers);
-		
+
 		this.state.polygon.getPath().addListener('set_at', searchWithinPolygon);
 		this.state.polygon.getPath().addListener('insert_at', searchWithinPolygon);
 	}
@@ -417,13 +438,13 @@ class App extends Component {
 	}
 
 	listClick = (event) => {
-		this.state.barMarkers.forEach( (marker) => {
-			if(marker.barData.venue.id === event.target.id){
+		this.state.barMarkers.forEach((marker) => {
+			if (marker.barData.venue.id === event.target.id) {
 				this.populateBarInfo(this.state.barInfo, marker, this.state.davisMap)
 			}
 		});
 	}
-	
+
 
 	////////////////////////////////////////////////
 	// INSERT SCRIPT TAG AND LOAD GOOGLE MAPS API //
@@ -453,30 +474,30 @@ class App extends Component {
 	////////////////////////////
 	// FETCH FOUR SQUARE DATA //
 	////////////////////////////
-	// A function to fetch details for each bar.
-    //The plan here was to use the IDs of the bars in my list of bars (which I fetched using the /explore endpoint) to get detailed information about each bar and then filter based on thingsl like price and rating.  Unfortunately, FourSquare's generosity doesn't stretch this far. I kept getting status 429 - too many requests.
-	loadDetails = () => {
-	// 	const endpoint = "https://api.foursquare.com/v2/venues/";
-	// 	const params = {
-	// 		client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
-	// 		client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
-	// 		v: 20190117,
-	// 	}
-	// 	for(let i=0; i<this.state.bars.length; i++){
-	// 		let theId = this.state.bars[i].venue.id + "?";
-	// 		let urlParams = new URLSearchParams(params);
-	// 		let theUrl = endpoint + theId + urlParams;
-	// 		axios.get(theUrl)
-	// 			.then((response) => {
-	// 				// I'm setting state for each bar detail item that's being fetched and that triggers a lot of unnecessary rerenders. What can I do about that?
-	// 				console.log("The URL was: ", theUrl, "The successful response is: ", response)
-	// 				this.setState({ barDetails: response.data.response.venue })
-	// 			})
-	// 			.catch((error) => console.log(error));
-	// 			if(i === this.state.bars.length - 1) this.loadMap();
-	// 	}
+
+	// TODO: A function to fetch details for a bar. This won't work as is. It depends on the bar's FourSquare id, which you need to search for and find first. Only then can you get bar details. 
+	// NOTE: FourSquare's generosity only stretches so far, so don't be surprised by status 429 - too many requests.
+	loadDetails = (event) => {
+		const endpoint = "https://api.foursquare.com/v2/venues/";
+		const params = {
+			client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
+			client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
+			v: 20190117,
+		}
+
+		let theId = event.target.venue.id + "?";
+		let urlParams = new URLSearchParams(params);
+		let theUrl = endpoint + theId + urlParams;
+		axios.get(theUrl)
+			.then((response) => {
+				// I'm setting state for each bar detail item that's being fetched and that triggers a lot of unnecessary rerenders. What can I do about that?
+				console.log("The URL was: ", theUrl, "The successful response is: ", response)
+				this.setState({ barDetails: response.data.response.venue })
+			})
+			.catch((error) => console.log(error));
+		this.loadMap();
 	}
-	
+
 	// A function to fetch our FourSquare data using axios
 	loadData = () => {
 		const endpoint = "https://api.foursquare.com/v2/venues/explore?";
@@ -485,11 +506,10 @@ class App extends Component {
 			client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
 			v: 20190117,
 			ll: `${this.lat},${this.lng}`,
-			section: "drinks"
+			section: "drinks",
 		}
 		axios.get(endpoint + new URLSearchParams(params))
 			// One of the most useful things I learned in Yahya Elharony's tutorial video series was that we can supply an optional callback to setState that will execute after state is set. Here we load the map, only after successfully fetching our locations from FourSquare.
-			// Originally the callback would have been loadDetails which would in turn call loadMap, but I hit request limits
 			.then((response) => this.setState({ bars: response.data.response.groups[0].items }, this.loadMap))
 			.catch((error) => console.log(error));
 	}
@@ -505,14 +525,14 @@ class App extends Component {
 				<div className="App">
 					<Navbar />
 					<Switch>
-						<Route exact path="/" render={() => <Mapx 
+						<Route exact path="/" render={() => <Mapx
 							// barDetails={this.state.barDetails}
 							barMarkers={this.state.barMarkers}
-							showListings = {this.showListings}
-							hideListings = {this.hideListings}
-							toggleDrawing = {this.toggleDrawing}
-							zoomToArea = {this.zoomToArea} 
-							searchWithinTime = {this.searchWithinTime}
+							showListings={this.showListings}
+							hideListings={this.hideListings}
+							toggleDrawing={this.toggleDrawing}
+							zoomToArea={this.zoomToArea}
+							searchWithinTime={this.searchWithinTime}
 							listClick={this.listClick}
 						/>} />
 						<Route exact path="/About" component={About} />
