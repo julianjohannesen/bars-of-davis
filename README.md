@@ -19,6 +19,10 @@ npm start
 ```
 Navigate to the app in your browser.
 
+You can see a staged version here:
+
+https://julianjohannesen.github.io/bars-of-davis/
+
 ## Issues
 
 Please report any issues [here](https://github.com/julianjohannesen/neighborhood_map/issues).

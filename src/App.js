@@ -41,7 +41,6 @@ class App extends Component {
 		bounds: {},
 		davisMap: {},
 		polygon: [],
-		searchResult: [],
 	}
 
 	// Davis Square lat long
@@ -49,9 +48,8 @@ class App extends Component {
 	lng = -71.122262;
 
 	initMap = () => {
-		// Initialize our map by creating a new map instance.
-
-		// mapOpts contains our map configuration
+		
+		// mapOpts contains our map options
 		const mapOpts = {
 			center: { "lat": this.lat, "lng": this.lng },
 			mapTypeControlOptions: {
@@ -59,7 +57,7 @@ class App extends Component {
 			},
 			zoom: 16,
 		}
-		// Create the map and bounds instances
+		// Create the map, bounds, info window, and drawing manager instances
 		this.setState({
 			davisMap: new window.google.maps.Map(document.getElementById("map"), mapOpts),
 			bounds: new window.google.maps.LatLngBounds(),
@@ -254,13 +252,21 @@ class App extends Component {
 	// MAP Tools //
 	///////////////
 
+	// handleSearch fires on change to the search input and attempts to match any word entered to a word in venue name, toggling the visible property for that venue's marker to true.
 	handleSearch = (event) => {
+		// Set the state of barMarkers to show matching bars and hide non-matching bars using marker.visible
 		this.setState({
-			searchResult: this.state.barMakers.map((marker) => {
-				if (event.target.value === marker.barData.name) {
-					return marker;
+			// Loop through each marker and examine the venue name. If the venue name partially or completely matches the search term, then set that marker's visible property to true. If there's no match, then set it to false.
+			barMarkers: this.state.barMarkers.map((marker) => {
+				let atLeastOne = false;
+				if (marker.barData.venue.name.toLowerCase().includes(event.target.value.toLowerCase())) {
+					marker.visible = true;
+					atLeastOne = true;
+				} else {
+					marker.visible= false;
 				}
-				return "No match found.";
+				
+				return marker;
 			}),
 		});
 	}
@@ -484,8 +490,24 @@ class App extends Component {
 	// FETCH FOUR SQUARE DATA //
 	////////////////////////////
 
+	// A function to fetch our FourSquare data using axios
+	loadData = () => {
+		const endpoint = "https://api.foursquare.com/v2/venues/explore?";
+		const params = {
+			client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
+			client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
+			v: 20190117,
+			ll: `${this.lat},${this.lng}`,
+			section: "drinks",
+		}
+		axios.get(endpoint + new URLSearchParams(params))
+			// One of the most useful things I learned in Yahya Elharony's tutorial video series was that we can supply an optional callback to setState that will execute after state is set. Here we load the map, only after successfully fetching our locations from FourSquare.
+			.then((response) => this.setState({ bars: response.data.response.groups[0].items }, this.loadMap))
+			.catch((error) => console.log(error));
+	}
+
 	// TODO: A function to fetch details for a bar. This won't work as is. It depends on the bar's FourSquare id, which you need to search for and find first. Only then can you get bar details. 
-	// NOTE: FourSquare's generosity only stretches so far, so don't be surprised by status 429 - too many requests.
+	// NOTE: FourSquare's generosity only stretches so far, so I need to watch for status 429 - too many requests.
 	loadDetails = (event) => {
 		const endpoint = "https://api.foursquare.com/v2/venues/";
 		const params = {
@@ -507,22 +529,6 @@ class App extends Component {
 		this.loadMap();
 	}
 
-	// A function to fetch our FourSquare data using axios
-	loadData = () => {
-		const endpoint = "https://api.foursquare.com/v2/venues/explore?";
-		const params = {
-			client_id: "W5EAA4B3DHWV1ZLG3OATVOZYTYZNI5WWG0LRLPHBHVHC3JV3",
-			client_secret: "3ZTMTTP43WP4OXWOAKITGOYLIVPVW1NDQHPZ0I342VH4R5X0",
-			v: 20190117,
-			ll: `${this.lat},${this.lng}`,
-			section: "drinks",
-		}
-		axios.get(endpoint + new URLSearchParams(params))
-			// One of the most useful things I learned in Yahya Elharony's tutorial video series was that we can supply an optional callback to setState that will execute after state is set. Here we load the map, only after successfully fetching our locations from FourSquare.
-			.then((response) => this.setState({ bars: response.data.response.groups[0].items }, this.loadMap))
-			.catch((error) => console.log(error));
-	}
-
 	// Call loadData (and thus loadMap), as soon as our component renders.
 	componentDidMount() {
 		this.loadData();
@@ -532,7 +538,7 @@ class App extends Component {
 		return (
 			<Router basename="bars-of-davis">
 				<div className="App">
-					<Navbar />
+					<Navbar handleSearch={this.handleSearch} />
 					<Switch>
 						<Route exact path="/" render={() => <Mapx
 							// barDetails={this.state.barDetails}
