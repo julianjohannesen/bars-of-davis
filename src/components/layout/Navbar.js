@@ -27,7 +27,7 @@ export default class Navbar extends Component {
 					</a>
 
 					<div 
-						className= {burgerActive ? "navbar-burger is-active" : "navbar-burger"} 
+						className= {this.state.burgerActive ? "navbar-burger is-active" : "navbar-burger"} 
 						data-target="navbarMenu" 
 						id="burgerButton"
 						onClick={this.toggleBurger}
@@ -41,7 +41,7 @@ export default class Navbar extends Component {
 					</div>
 				</div>
 
-				<div id="navbarMenu" className= {burgerActive ? "navbar-menu is-active" : "navbar-menu">
+				<div id="navbarMenu" className= {this.state.burgerActive ? "navbar-menu is-active" : "navbar-menu"}>
 					<div className="navbar-start">
 					</div>
 					<div className="navbar-end">
