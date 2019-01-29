@@ -1,14 +1,14 @@
 {
-  "main.css": "/bars-of-davis/static/css/main.3b44f5f0.chunk.css",
-  "main.js": "/bars-of-davis/static/js/main.839f49b7.chunk.js",
-  "main.js.map": "/bars-of-davis/static/js/main.839f49b7.chunk.js.map",
-  "static/js/1.54c34e51.chunk.js": "/bars-of-davis/static/js/1.54c34e51.chunk.js",
-  "static/js/1.54c34e51.chunk.js.map": "/bars-of-davis/static/js/1.54c34e51.chunk.js.map",
+  "main.css": "/bars-of-davis/static/css/main.7eeb6613.chunk.css",
+  "main.js": "/bars-of-davis/static/js/main.b6ea62d7.chunk.js",
+  "main.js.map": "/bars-of-davis/static/js/main.b6ea62d7.chunk.js.map",
+  "static/js/1.4c55cc1a.chunk.js": "/bars-of-davis/static/js/1.4c55cc1a.chunk.js",
+  "static/js/1.4c55cc1a.chunk.js.map": "/bars-of-davis/static/js/1.4c55cc1a.chunk.js.map",
   "runtime~main.js": "/bars-of-davis/static/js/runtime~main.76bc196b.js",
   "runtime~main.js.map": "/bars-of-davis/static/js/runtime~main.76bc196b.js.map",
   "static/media/oms-960x340.jpg": "/bars-of-davis/static/media/oms-960x340.e7283396.jpg",
-  "static/css/main.3b44f5f0.chunk.css.map": "/bars-of-davis/static/css/main.3b44f5f0.chunk.css.map",
+  "static/css/main.7eeb6613.chunk.css.map": "/bars-of-davis/static/css/main.7eeb6613.chunk.css.map",
   "index.html": "/bars-of-davis/index.html",
-  "precache-manifest.81123bbac0e4b2c4a85db7be68a38dfd.js": "/bars-of-davis/precache-manifest.81123bbac0e4b2c4a85db7be68a38dfd.js",
+  "precache-manifest.58b49e1c3a432f3ec033ca316f2382e3.js": "/bars-of-davis/precache-manifest.58b49e1c3a432f3ec033ca316f2382e3.js",
   "service-worker.js": "/bars-of-davis/service-worker.js"
 }
