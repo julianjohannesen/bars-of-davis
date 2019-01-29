@@ -57,7 +57,7 @@ class App extends Component {
 			mapTypeControlOptions: {
 				mapTypeIds: ['styled_davisMap', 'roadmap',]
 			},
-			zoom: 12,
+			zoom: 16,
 		}
 		// Create the map and bounds instances
 		this.setState({
@@ -174,7 +174,7 @@ class App extends Component {
 		this.state.davisMap.mapTypes.set('styled_davisMap', davisMapStyle);
 		this.state.davisMap.setMapTypeId('styled_davisMap');
 
-		// Need to find a way to create color for default and highlighted marker icons
+		// TODO: Need to find a way to create color for default and highlighted marker icons
 
 		// Map over our data and create a marker for each bar datum.
 		// see https://developers.google.com/maps/documentation/javascript/reference/marker
@@ -238,6 +238,14 @@ class App extends Component {
 		if (info !== marker) {
 			this.setState({
 				barInfo: updateInfoWin(),
+				barMakers: this.state.barMarkers.map( (markerItem) => {
+					if(markerItem.barData.id === marker.barData.id){
+						markerItem.animation = toggleBounce();
+						return marker
+					} else {
+						return marker
+					}
+				}),
 			});
 		}
 	}
@@ -298,10 +306,9 @@ class App extends Component {
 	*/
 
 	// PROBLEMS: 
-	// 1. Editing the polygon never worked but it used to allow you to edit the polygon and just wouldn't show new markers, whereas now it throws an error that this.props.barMakers.map is not a function
-	// 2. Toggling off the tools does not adjust which markers are showing.
-	// 3. Old polygon's stick around
-	// When I edit the polgyon, it should show markers within the new boundries. Part of this may be repaired by fixing state issues for drawingMngr.
+	// 1. Editing the polygon by expanding it's boundaries does not show new new markers. I need to call the handle function on each edit.
+	// 2. Old polygon's stick around when you draw a new one. At start of drawing, I need to clear previous polygons.
+
 	handlePolygon = (event) => {
 		const searchWithinPolygon = (markers) => {
 			this.setState({
@@ -437,6 +444,8 @@ class App extends Component {
 		}
 	}
 
+	// PROBLEMS: 
+	// 1. zooming on the map does not effect which venues are showing in the list view. On zoom, I need to update each marker's visible property.
 	listClick = (event) => {
 		this.state.barMarkers.forEach((marker) => {
 			if (marker.barData.venue.id === event.target.id) {
