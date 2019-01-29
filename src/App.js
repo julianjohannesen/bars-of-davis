@@ -180,7 +180,7 @@ class App extends Component {
 			barMarkers: this.state.bars.map((bar, index) => {
 
 				const image = {
-					url: 'http://maps.google.com/mapfiles/ms/micons/bar.png',
+					url: 'https://maps.google.com/mapfiles/ms/micons/bar.png',
 					size: new window.google.maps.Size(32, 32),
 					origin: new window.google.maps.Point(0, 0),
 					anchor: new window.google.maps.Point(16, 32),
