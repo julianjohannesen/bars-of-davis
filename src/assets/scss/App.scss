@@ -28,7 +28,7 @@ div.App {
         }
 
 main {
-    height: 700px;
+    min-height: 700px;
     padding: 1em;
 
     .form-container {
@@ -45,7 +45,7 @@ main {
     }
 
     #list {
-        height: 50%;
+        height: 500px;
 
         #listUl {
             overflow-y: scroll;
@@ -71,6 +71,6 @@ main {
     }
 
     #map {
-        height: 50%;
+        height: 500px;
     }
 }

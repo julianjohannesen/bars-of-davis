@@ -6767,7 +6767,7 @@ main {
   grid-column: 2/-1; }
 
 main {
-  height: 700px;
+  min-height: 700px;
   padding: 1em; }
   main .form-container {
     display: flex;
@@ -6779,7 +6779,7 @@ main {
     main .form-container .text-margin {
       margin: calc(0.375em - 1px) 0.6em; }
   main #list {
-    height: 50%; }
+    height: 500px; }
     main #list #listUl {
       overflow-y: scroll;
       height: calc(100% - 3rem); }
@@ -6795,4 +6795,4 @@ main {
       main #list #listUl .menu-item:last-child {
         border-bottom: 1px solid #242f3e; }
   main #map {
-    height: 50%; }
+    height: 500px; }
