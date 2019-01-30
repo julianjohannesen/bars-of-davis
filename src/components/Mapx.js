@@ -29,7 +29,7 @@ export default class Mapx extends Component {
 
 						<div className="field has-addons" style={{ marginRight: "1em" }}>
 							<div className="control">
-								<input className="input" id="zoom-to-area-text" type="text" placeholder="Enter street address" />
+								<input className="input" id="zoom-to-area-text" title="Enter a street address and click zoom to zoom to area" type="text" placeholder="Enter street address" />
 							</div>
 
 							<div className="control">
@@ -68,7 +68,7 @@ export default class Mapx extends Component {
 
 						<div className="field has-addons">
 							<div className="control">
-								<input className="input" id="search-within-time-text" type="text" placeholder="Enter street address" />
+								<input className="input" id="search-within-time-text" title="After selecting a length of time and mode of travel, enter a starting address to find venues that can reached in the time indicated, by the mode of travel indicated." type="text" placeholder="Enter street address" />
 							</div>
 
 							<div className="control">
