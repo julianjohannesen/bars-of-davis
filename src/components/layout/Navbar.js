@@ -22,7 +22,7 @@ export default class Navbar extends Component {
 			// Bulma.io's suggested navbar structure with some inspiration from Daniel Supernault's 'Band' theme and my own edits to make it React-friendly
 			<nav className="navbar is-dark" role="navigation" style={{backgroundColor: "#242f3e"}}>
 				<div className="navbar-brand">
-					<a className="navbar-item is-size-1" href="/">
+					<a className="navbar-item is-size-1 has-text-white" href="/">
 						The Bars of Davis Square
 					</a>
 
@@ -34,6 +34,7 @@ export default class Navbar extends Component {
 						role="button" 
 						style={{outline: "none"}}
 						tabIndex="0"
+						title="Hamburger menu button"
 					>
 						<span></span>
 						<span></span>
@@ -45,12 +46,12 @@ export default class Navbar extends Component {
 					<div className="navbar-start">
 					</div>
 					<div className="navbar-end">
-						<Link className="navbar-item" to="/">Home</Link>
-						<Link className="navbar-item" to="/about">About</Link>
+						<Link className="navbar-item has-text-white" to="/">Home</Link>
+						<Link className="navbar-item has-text-white" to="/about">About</Link>
 						<div className="navbar-item">
 							<div className="field">
 								<div className="control">
-									<input className="input" onChange={this.props.handleSearch} type="text" placeholder="find a bar" />
+									<input className="input" onChange={this.props.handleSearch} title="Enter the name of a bar to filter Davis Square Area bars. Only bars containing the search term will appear in the list of venues and in the map." type="text" placeholder="find a bar" />
 								</div>
 							</div>
 						</div>

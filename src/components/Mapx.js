@@ -13,17 +13,17 @@ export default class Mapx extends Component {
 					<div className="form-container">
 						<div className="field has-addons" style={{ marginRight: "1em" }}>
 							<div className="control">
-								<button className="button" id="show-listings" onClick={showListings} >Show</button>
+								<button className="button" id="show-listings" title="Show all venues in Davis Square in list view and on map" onClick={showListings} >Show</button>
 							</div>
 
 							<div className="control">
-								<button className="button" id="hide-listings" onClick={hideListings} >Hide</button>
+								<button className="button" id="hide-listings" title="Hide all venues from list view and map" onClick={hideListings} >Hide</button>
 							</div>
 						</div>
 
 						<div className="field" style={{ marginRight: "1em" }}>
 							<div className="control">
-								<button className="button" id="toggle-drawing" onClick={toggleDrawing} >Drawing Tools</button>
+								<button className="button" id="toggle-drawing" title="Show drawing tools on map." onClick={toggleDrawing} >Drawing Tools</button>
 							</div>
 						</div>
 
@@ -33,7 +33,7 @@ export default class Mapx extends Component {
 							</div>
 
 							<div className="control">
-								<button className="button" id="zoom-to-area" onClick={zoomToArea} >Zoom</button>
+								<button className="button" id="zoom-to-area" title="After entering an address, click here to zoom to area" onClick={zoomToArea} >Zoom</button>
 							</div>
 						</div>
 
@@ -44,7 +44,7 @@ export default class Mapx extends Component {
 						</div>
 						<div className="field has-addons">
 							<div className="select control">
-								<select className="" id="max-duration" style={{ borderTopRightRadius: "0", borderBottomRightRadius: "0" }}>
+								<select className="" id="max-duration" title="Select a length of time you are willing to travel in minutes." style={{ borderTopRightRadius: "0", borderBottomRightRadius: "0" }}>
 									<option value="10">10 min</option>
 									<option value="15">15 min</option>
 									<option value="30">30 min</option>
@@ -52,7 +52,7 @@ export default class Mapx extends Component {
 								</select>
 							</div>
 							<div className="select control">
-								<select className="" defaultValue="WALKING" id="mode" style={{ borderTopLeftRadius: "0", borderBottomLeftRadius: "0" }}>
+								<select className="" defaultValue="WALKING" id="mode" title="Select a mode of travel." style={{ borderTopLeftRadius: "0", borderBottomLeftRadius: "0" }}>
 									<option value="DRIVING">drive</option>
 									<option value="WALKING">walk</option>
 									<option value="BICYCLING">bike</option>
@@ -68,11 +68,11 @@ export default class Mapx extends Component {
 
 						<div className="field has-addons">
 							<div className="control">
-								<input className="input" id="search-within-time-text" title="After selecting a length of time and mode of travel, enter a starting address to find venues that can reached in the time indicated, by the mode of travel indicated." type="text" placeholder="Enter street address" />
+								<input className="input" id="search-within-time-text" title="After selecting a length of time and mode of travel, enter a starting address to find venues that can reached in the time indicated, by the mode of travel indicated, and then click on the 'Go' button." type="text" placeholder="Enter street address" />
 							</div>
 
 							<div className="control">
-								<button className="button" id="search-within-time" onClick={searchWithinTime} >Go</button>
+								<button className="button" id="search-within-time" title="After entering a starting address, click here to filter Davis Square bars by distance by mode of travel." onClick={searchWithinTime} >Go</button>
 							</div>
 						</div>
 					</div>
