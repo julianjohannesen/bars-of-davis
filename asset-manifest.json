@@ -1,14 +1,14 @@
 {
-  "main.css": "/bars-of-davis/static/css/main.e0826a55.chunk.css",
-  "main.js": "/bars-of-davis/static/js/main.9c07a66c.chunk.js",
-  "main.js.map": "/bars-of-davis/static/js/main.9c07a66c.chunk.js.map",
-  "static/js/1.4c55cc1a.chunk.js": "/bars-of-davis/static/js/1.4c55cc1a.chunk.js",
-  "static/js/1.4c55cc1a.chunk.js.map": "/bars-of-davis/static/js/1.4c55cc1a.chunk.js.map",
-  "runtime~main.js": "/bars-of-davis/static/js/runtime~main.76bc196b.js",
-  "runtime~main.js.map": "/bars-of-davis/static/js/runtime~main.76bc196b.js.map",
-  "static/media/oms-960x340.jpg": "/bars-of-davis/static/media/oms-960x340.e7283396.jpg",
-  "static/css/main.e0826a55.chunk.css.map": "/bars-of-davis/static/css/main.e0826a55.chunk.css.map",
+  "main.css": "/bars-of-davis/static/css/main.55efae10.chunk.css",
+  "main.js": "/bars-of-davis/static/js/main.d74662de.chunk.js",
+  "main.js.map": "/bars-of-davis/static/js/main.d74662de.chunk.js.map",
+  "runtime~main.js": "/bars-of-davis/static/js/runtime~main.e5d675af.js",
+  "runtime~main.js.map": "/bars-of-davis/static/js/runtime~main.e5d675af.js.map",
+  "static/js/2.4d20983b.chunk.js": "/bars-of-davis/static/js/2.4d20983b.chunk.js",
+  "static/js/2.4d20983b.chunk.js.map": "/bars-of-davis/static/js/2.4d20983b.chunk.js.map",
   "index.html": "/bars-of-davis/index.html",
-  "precache-manifest.0e32df6b3c1abb85a5865a9a6367a9d0.js": "/bars-of-davis/precache-manifest.0e32df6b3c1abb85a5865a9a6367a9d0.js",
-  "service-worker.js": "/bars-of-davis/service-worker.js"
+  "precache-manifest.1866816cdae5ba1733501ea29f09f4a1.js": "/bars-of-davis/precache-manifest.1866816cdae5ba1733501ea29f09f4a1.js",
+  "service-worker.js": "/bars-of-davis/service-worker.js",
+  "static/css/main.55efae10.chunk.css.map": "/bars-of-davis/static/css/main.55efae10.chunk.css.map",
+  "static/media/oms-960x340.jpg": "/bars-of-davis/static/media/oms-960x340.e7283396.jpg"
 }
